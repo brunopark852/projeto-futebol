@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  --escudo-pequeno: 1.5rem; /* 24px */
+  --escudo-medio: 2.5rem; /* 40px */
+  --escudo-grande: 4rem; /* 64px */
+}
+
+@layer base {
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@layer components {
+  .escudo-pequeno {
+    width: var(--escudo-pequeno);
+    height: var(--escudo-pequeno);
+    object-fit: contain;
+  }
+  .escudo-medio {
+    width: var(--escudo-medio);
+    height: var(--escudo-medio);
+    object-fit: contain;
+  }
+  .escudo-grande {
+    width: var(--escudo-grande);
+    height: var(--escudo-grande);
+    object-fit: contain;
+  }
+}

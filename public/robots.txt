@@ -1,0 +1,11 @@
+# Projeto Futebol - robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://projetofutebol.com.br/sitemap.xml
+
+# Disallow admin/private areas (none in this project)
+# Disallow: /api/
+# Disallow: /_next/
+# Disallow: /*.json$
