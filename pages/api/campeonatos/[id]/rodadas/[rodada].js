@@ -1,0 +1,39 @@
+import axios from 'axios';
+
+export default async function handler(req, res) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ message: 'Método não permitido' });
+  }
+
+  const { id, rodada } = req.query;
+
+  if (!id) {
+    return res.status(400).json({ message: 'ID do campeonato é obrigatório' });
+  }
+  if (!rodada) {
+    return res.status(400).json({ message: 'Número da rodada é obrigatório' });
+  }
+
+  if (!/^\d+$/.test(id)) {
+    return res.status(400).json({ message: 'ID do campeonato inválido' });
+  }
+  if (!/^\d+$/.test(rodada)) {
+    return res.status(400).json({ message: 'Número da rodada inválido' });
+  }
+
+  try {
+    const response = await axios.get(`https://api.api-futebol.com.br/v1/campeonatos/${id}/rodadas/${rodada}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.API_FUTEBOL_KEY}`,
+      },
+    });
+
+    return res.status(200).json(response.data);
+  } catch (error) {
+    const status = error.response?.status || 500;
+    return res.status(status).json({
+      error: 'Erro ao buscar detalhes da rodada',
+      message: error.response?.data?.message || error.message,
+    });
+  }
+}

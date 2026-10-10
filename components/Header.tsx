@@ -5,8 +5,8 @@ export default function Header() {
     <header className="bg-emerald-700 text-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="text-xl font-bold" aria-label="Projeto Futebol - Início">
-            Projeto Futebol
+          <Link href="/" className="text-xl font-bold" aria-label="Futebol - Início">
+            Futebol
           </Link>
           <nav className="hidden md:flex items-center space-x-6" aria-label="Navegação principal">
             <Link href="/tabela" className="text-sm font-medium hover:text-emerald-200 transition-colors">
@@ -17,6 +17,9 @@ export default function Header() {
             </Link>
             <Link href="/artilheiros" className="text-sm font-medium hover:text-emerald-200 transition-colors">
               Artilheiros
+            </Link>
+            <Link href="/noticias" className="text-sm font-medium hover:text-emerald-200 transition-colors">
+              Notícias
             </Link>
           </nav>
         </div>

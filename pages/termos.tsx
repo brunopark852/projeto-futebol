@@ -1,108 +1,101 @@
 import React from 'react';
 import Layout from '@/components/Layout';
+import Link from 'next/link';
 
 export default function TermosPage() {
   return (
-    <Layout title="Termos de Uso - Projeto Futebol" description="Termos de uso do Projeto Futebol - regras e condições para uso do portal.">
+    <Layout title="Termos de Uso - Futebol" description="Termos de uso do Futebol - regras e condições para uso do portal.">
       <div className="max-w-3xl mx-auto prose prose-slate">
         <h1 className="text-3xl font-bold text-slate-900 mb-6">Termos de Uso</h1>
-        <p className="text-slate-600 mb-6"><strong>Última atualização:</strong> {new Date().toLocaleDateString('pt-BR')}</p>
+        <p className="text-slate-600 mb-6"><strong>Última atualização:</strong> 10/10/2026</p>
 
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-slate-900 mb-3">1. Aceitação dos Termos</h2>
           <p className="text-slate-700 mb-4">
-            Ao acessar e usar o Projeto Futebol ("site", "portal", "nós"), você concorda em cumprir estes Termos de Uso
-            e nossa <a href="/privacidade" className="text-emerald-700 hover:underline">Política de Privacidade</a>.
-            Se não concordar com qualquer parte, não utilize o site.
+            Ao acessar ou utilizar o site Projeto Futebol ("nós", "nosso", "plataforma"), você concorda expressamente em cumprir e estar vinculado aos seguintes Termos de Uso e à nossa <Link href="/politica-privacidade" className="text-emerald-700 hover:underline">Política de Privacidade</Link>. Se você não concordar com qualquer parte destes termos, não deverá acessar nem utilizar nossos serviços.
           </p>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-slate-900 mb-3">2. Descrição do Serviço</h2>
+          <h2 className="text-xl font-semibold text-slate-900 mb-3">2. Descrição dos Serviços</h2>
           <p className="text-slate-700 mb-4">
-            O Projeto Futebol é um portal de estatísticas e acompanhamento de futebol brasileiro em tempo real.
-            Fornecemos tabelas de classificação, artilheiros, jogos ao vivo e detalhes de partidas, utilizando dados
-            da <a href="https://api-futebol.com.br" target="_blank" rel="noopener noreferrer" className="text-emerald-700 hover:underline">API Futebol</a>.
+            O Projeto Futebol é um portal informativo dedicado à disponibilização de estatísticas, dados, classificações, métricas e análises sobre o futebol.
           </p>
+          <ul className="list-disc list-inside text-slate-700 mb-4 space-y-1">
+            <li>As informações exibidas possuem caráter meramente informativo e de entretenimento.</li>
+            <li>Empenhamo-nos em manter as informações atualizadas e precisas, mas não garantimos que todo o conteúdo esteja isento de falhas, erros ortográficos, divergências de horários ou atrasos no processamento de dados esportivos.</li>
+          </ul>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-slate-900 mb-3">3. Uso Permitido</h2>
-          <p className="text-slate-700 mb-4">Você concorda em usar o site apenas para fins legais e de acordo com estes termos. É proibido:</p>
+          <h2 className="text-xl font-semibold text-slate-900 mb-3">3. Uso Aceitável da Plataforma</h2>
+          <p className="text-slate-700 mb-4">
+            Ao utilizar nossa plataforma, você se compromete a:
+          </p>
           <ul className="list-disc list-inside text-slate-700 mb-4 space-y-1">
-            <li>Raspagem (scraping) automatizada de dados sem autorização</li>
-            <li>Tentativas de burlar medidas de segurança ou limitação de taxa</li>
-            <li>Uso comercial dos dados sem licença adequada</li>
-            <li>Qualquer atividade que sobrecarregue ou prejudique o funcionamento do site</li>
-            <li>Redistribuição do conteúdo como se fosse seu</li>
+            <li>Uso Pessoal e Não Comercial: Utilizar as informações e conteúdos disponibilizados exclusivamente para fins pessoais e não comerciais.</li>
+            <li>Integridade do Sistema: Não realizar qualquer conduta que possa danificar, sobrecarregar, desabilitar ou prejudicar os servidores ou redes conectadas à plataforma.</li>
+            <li>Extração Não Autorizada de Dados: É proibido o uso de bots, crawlers, scrapers ou quaisquer ferramentas automatizadas para extração sistemática de dados do site sem prévia autorização por escrito.</li>
+            <li>Respeito à Legislação: Não utilizar o site para finalidades ilícitas, fraudulentas ou contrárias às leis brasileiras vigentes.</li>
           </ul>
         </section>
 
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-slate-900 mb-3">4. Propriedade Intelectual</h2>
           <p className="text-slate-700 mb-4">
-            O design, layout, código e apresentação do Projeto Futebol são de nossa propriedade.
-            Os dados esportivos (tabelas, gols, escalações) pertencem às respectivas entidades organizadoras
-            e são licenciados via API Futebol. Você não adquire direitos de propriedade ao acessar o site.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-xl font-semibold text-slate-900 mb-3">5. Isenção de Garantias</h2>
-          <p className="text-slate-700 mb-4">
-            O site é fornecido "como está" e "conforme disponível". Não garantimos que:
+            Todo o conteúdo disponível no site — incluindo textos, estruturas de dados, elementos gráficos, logotipos, layout e código-fonte — é de propriedade do Projeto Futebol ou de seus parceiros e licenciantes, sendo protegido pelas leis brasileiras de propriedade intelectual e direitos autorais.
           </p>
           <ul className="list-disc list-inside text-slate-700 mb-4 space-y-1">
-            <li>O site estará sempre disponível ou livre de erros</li>
-            <li>Os dados estarão sempre precisos, completos ou atualizados em tempo real</li>
-            <li>Defeitos serão corrigidos imediatamente</li>
+            <li>Nenhuma parte do site pode ser copiada, reproduzida, republicada, modificada ou distribuída sem autorização prévia por escrito.</li>
+            <li>Nomes, marcas e escudos de clubes, federações e campeonatos mencionados no site pertencem aos seus respectivos titulares de direitos e são utilizados estritamente para fins identificativos e informativos.</li>
           </ul>
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-900 mb-3">5. Isenção e Limitação de Responsabilidade</h2>
+          <ul className="list-disc list-inside text-slate-700 mb-4 space-y-1">
+            <li><strong>Natureza Informativa:</strong> O Projeto Futebol não é uma casa de apostas nem oferece serviços de jogos de azar. O conteúdo estatístico não constitui conselho financeiro, garantia de resultados ou recomendação para apostas.</li>
+            <li><strong>Disponibilidade do Serviço:</strong> Não garantimos que a plataforma estará disponível de forma contínua, ininterrupta ou livre de erros. Reservamo-nos o direito de alterar, suspender ou descontinuar qualquer aspecto do site a qualquer momento, sem aviso prévio.</li>
+            <li><strong>Danos Diretos ou Indiretos:</strong> Na extensão máxima permitida por lei, não seremos responsáveis por quaisquer danos diretos, indiretos, incidentais ou consequentes resultantes do uso ou da impossibilidade de uso de nossa plataforma.</li>
+          </ul>
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-900 mb-3">6. Links para Sites e Conteúdos de Terceiros</h2>
           <p className="text-slate-700 mb-4">
-            Os dados são fornecidos por terceiros (API Futebol) e podem conter atrasos ou imprecisões.
-            Não nos responsabilizamos por decisões baseadas nas informações do site.
+            Nosso site pode conter hiperlinks para sites de terceiros, incluindo anunciantes, parceiros comerciais ou redes sociais.
+          </p>
+          <ul className="list-disc list-inside text-slate-700 mb-4 space-y-1">
+            <li>Não exercemos controle sobre o conteúdo, políticas ou práticas de privacidade desses sites externos.</li>
+            <li>A inclusão de qualquer link não implica endosso ou responsabilidade do Projeto Futebol pelos produtos, serviços ou conteúdos oferecidos nesses locais.</li>
+          </ul>
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-900 mb-3">7. Proteção de Dados Pessoais</h2>
+          <p className="text-slate-700 mb-4">
+            O tratamento de dados pessoais dos usuários decorrente da utilização deste site é regido pela nossa Política de Privacidade, em conformidade com a Lei Geral de Proteção de Dados Pessoais (LGPD - Lei nº 13.709/2018).
           </p>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-slate-900 mb-3">6. Limitação de Responsabilidade</h2>
+          <h2 className="text-xl font-semibold text-slate-900 mb-3">8. Modificações nos Termos de Uso</h2>
           <p className="text-slate-700 mb-4">
-            Em nenhuma hipótese seremos responsáveis por danos diretos, indiretos, incidentais, consequenciais
-            ou punitivos decorrentes do uso ou impossibilidade de uso do site, incluindo perda de dados,
-            lucros cessantes ou interrupção de negócios.
+            Reservamo-nos o direito de revisar e alterar estes Termos de Uso a qualquer momento. Quaisquer alterações entram em vigor imediatamente após sua publicação no site, acompanhadas da data da "Última atualização". Recomenda-se a revisão periódica deste documento.
           </p>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-slate-900 mb-3">7. Publicidade e Links de Terceiros</h2>
+          <h2 className="text-xl font-semibold text-slate-900 mb-3">9. Legislação Aplicável e Foro</h2>
           <p className="text-slate-700 mb-4">
-            Exibimos anúncios via Google AdSense e links para sites de terceiros. Não endossamos,
-            controlamos ou nos responsabilizamos pelo conteúdo, precisão ou práticas de privacidade
-            de anunciantes ou sites vinculados.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-xl font-semibold text-slate-900 mb-3">8. Modificações no Serviço</h2>
-          <p className="text-slate-700 mb-4">
-            Podemos modificar, suspender ou descontinuar o site (ou partes dele) a qualquer momento,
-            com ou sem aviso prévio. Não seremos responsáveis por quaisquer modificações, suspensões
-            ou descontinuações.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-xl font-semibold text-slate-900 mb-3">9. Lei Aplicável e Foro</h2>
-          <p className="text-slate-700 mb-4">
-            Estes termos são regidos pelas leis da República Federativa do Brasil. Quaisquer disputas
-            serão resolvidas no foro da comarca de São Paulo/SP, com renúncia a qualquer outro.
+            Estes Termos de Uso são regidos e interpretados de acordo com as leis da República Federativa do Brasil. Fica eleito o Foro do domicílio do usuário para dirimir quaisquer controvérsias decorrentes destes termos ou do uso da plataforma.
           </p>
         </section>
 
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-slate-900 mb-3">10. Contato</h2>
           <p className="text-slate-700 mb-4">
-            Dúvidas sobre estes Termos de Uso? Entre em contato através da nossa página de
-            <a href="/contato" className="text-emerald-700 hover:underline">Contato</a>.
+            Caso tenha dúvidas, comentários ou sugestões referentes a estes Termos de Uso, entre em contato conosco por meio da nossa página de Contato.
           </p>
         </section>
       </div>

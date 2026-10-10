@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
             <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-3">
-              Projeto Futebol
+              Futebol
             </h3>
             <p className="text-sm text-slate-600">
               Portal de estatísticas e acompanhamento de futebol brasileiro em tempo real.
@@ -35,8 +35,7 @@ export default function Footer() {
           </nav>
         </div>
         <div className="mt-8 pt-6 border-t border-gray-200 text-center text-sm text-slate-500">
-          <p>&copy; {new Date().getFullYear()} Projeto Futebol. Todos os direitos reservados.</p>
-          <p className="mt-1">Dados fornecidos por <a href="https://api-futebol.com.br" target="_blank" rel="noopener noreferrer" className="text-emerald-700 hover:underline">API Futebol</a>.</p>
+          <p>&copy; {new Date().getFullYear()} Futebol. Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>

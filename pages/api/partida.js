@@ -11,6 +11,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'ID da partida é obrigatório' });
   }
 
+  if (!/^\d+$/.test(id)) {
+    return res.status(400).json({ message: 'ID inválido' });
+  }
+
   try {
     const response = await axios.get(`https://api.api-futebol.com.br/v1/partidas/${id}`, {
       headers: {

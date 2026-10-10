@@ -1,5 +1,6 @@
 import React from 'react';
 import Layout from '@/components/Layout';
+import Link from 'next/link';
 
 export default function ContatoPage() {
   return (
@@ -71,7 +72,7 @@ export default function ContatoPage() {
           <dl className="space-y-4">
             <div>
               <dt className="font-medium text-slate-900">Como faço para exercer meus direitos LGPD?</dt>
-              <dd className="text-slate-600 mt-1">Envie um e-mail para <a href="mailto:dpo@projetofutebol.com.br" className="text-emerald-700 hover:underline">dpo@projetofutebol.com.br</a> com o assunto "LGPD" e descreva qual direito deseja exercer (acesso, correção, exclusão, etc.). Responderemos em até 15 dias.</dd>
+              <dd className="text-slate-600 mt-1">Envie um e-mail para <a href="mailto:dpo@projetofutebol.com.br" className="text-emerald-700 hover:underline">dpo@projetofutebol.com.br</a> com o assunto &quot;LGPD&quot; e descreva qual direito deseja exercer (acesso, correção, exclusão, etc.). Responderemos em até 15 dias.</dd>
             </div>
             <div>
               <dt className="font-medium text-slate-900">Os dados das partidas são em tempo real?</dt>
@@ -83,7 +84,7 @@ export default function ContatoPage() {
             </div>
             <div>
               <dt className="font-medium text-slate-900">Como funciona a publicidade no site?</dt>
-              <dd className="text-slate-600 mt-1">Utilizamos Google AdSense para exibir anúncios. Eles podem usar cookies para personalização. Veja nossa <a href="/privacidade" className="text-emerald-700 hover:underline">Política de Privacidade</a> para detalhes e como optar por não participar.</dd>
+              <dd className="text-slate-600 mt-1">Utilizamos Google AdSense para exibir anúncios. Eles podem usar cookies para personalização. Veja nossa <Link href="/privacidade" className="text-emerald-700 hover:underline">Política de Privacidade</Link> para detalhes e como optar por não participar.</dd>
             </div>
           </dl>
         </div>

@@ -3,7 +3,7 @@ import Layout from '@/components/Layout';
 import AdSlot from '@/components/AdSlot';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
-import Link from 'next/link';
+import Image from 'next/image';
 
 interface ArtilheiroAPI {
   atleta: {
@@ -31,7 +31,7 @@ interface ArtilheirosPageProps {
 
 export default function ArtilheirosPage({ artilheiros, campeonato }: ArtilheirosPageProps) {
   return (
-    <Layout title={`Artilheiros ${campeonato.nome} ${campeonato.edicao_atual} - Projeto Futebol`} description={`Ranking de artilheiros do ${campeonato.nome} ${campeonato.edicao_atual}`}>
+    <Layout title={`Artilheiros ${campeonato.nome} ${campeonato.edicao_atual} - Futebol`} description={`Ranking de artilheiros do ${campeonato.nome} ${campeonato.edicao_atual}`}>
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Artilheiros - {campeonato.nome} {campeonato.edicao_atual}</h1>
         <p className="text-slate-600 mt-1">Ranking de goleadores atualizado</p>
@@ -66,12 +66,12 @@ export default function ArtilheirosPage({ artilheiros, campeonato }: Artilheiros
                   </td>
                   <td className="px-3 py-3 flex items-center gap-3">
                     {artilheiro.atleta.foto && (
-                      <img src={artilheiro.atleta.foto} alt={artilheiro.atleta.nome_popular} className="escudo-medio rounded-full object-cover" loading="lazy" />
+                      <Image src={artilheiro.atleta.foto} alt={artilheiro.atleta.nome_popular} className="escudo-medio rounded-full object-cover" loading="lazy" width={50} height={50} />
                     )}
                     <span className="font-medium text-slate-900">{artilheiro.atleta.nome_popular}</span>
                   </td>
                   <td className="px-3 py-3 flex items-center gap-2">
-                    <img src={artilheiro.time.escudo} alt={artilheiro.time.nome_popular} className="escudo-pequeno" loading="lazy" />
+                    <Image src={artilheiro.time.escudo} alt={artilheiro.time.nome_popular} className="escudo-pequeno" loading="lazy" width={30} height={30} />
                     <span className="text-slate-600 text-sm">{artilheiro.time.sigla}</span>
                   </td>
                   <td className="px-3 py-3 text-right font-bold text-emerald-700 text-lg">{artilheiro.gols}</td>
@@ -83,7 +83,7 @@ export default function ArtilheirosPage({ artilheiros, campeonato }: Artilheiros
       </div>
 
       <p className="mt-6 text-xs text-slate-500 text-center">
-        Dados fornecidos por <a href="https://api-futebol.com.br" target="_blank" rel="noopener noreferrer" className="text-emerald-700 hover:underline">API Futebol</a>. Atualizado em {new Date().toLocaleDateString('pt-BR')}.
+        Dados fornecidos por fontes confiáveis.
       </p>
     </Layout>
   );
@@ -103,12 +103,13 @@ export const getServerSideProps: GetServerSideProps<ArtilheirosPageProps> = asyn
         artilheiros: response.data,
         campeonato: {
           nome: 'Brasileirão Série A',
-          edicao_atual: '2024',
+          edicao_atual: '2026',
         },
       },
     };
-  } catch (error: any) {
-    console.error('Erro ao buscar artilheiros:', error.response?.data || error.message);
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: unknown }; message?: string };
+    console.error('Erro ao buscar artilheiros:', err.response?.data || err.message);
     return {
       props: {
         artilheiros: [],

@@ -1,5 +1,6 @@
 import React from 'react';
 import Layout from '@/components/Layout';
+import Link from 'next/link';
 
 export default function PrivacidadePage() {
   return (
@@ -11,7 +12,7 @@ export default function PrivacidadePage() {
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-slate-900 mb-3">1. Introdução</h2>
           <p className="text-slate-700 mb-4">
-            O Projeto Futebol ("nós", "nosso", "nos") está comprometido em proteger a privacidade dos visitantes do nosso site.
+            O Projeto Futebol (&quot;nós&quot;, &quot;nosso&quot;, &quot;nos&quot;) está comprometido em proteger a privacidade dos visitantes do nosso site.
             Esta Política de Privacidade explica como coletamos, usamos, divulgamos e protegemos suas informações quando você acessa nosso portal de estatísticas de futebol.
           </p>
         </section>
@@ -95,7 +96,7 @@ export default function PrivacidadePage() {
             <li>Revogação do consentimento</li>
           </ul>
           <p className="text-slate-700 mb-4">
-            Para exercer seus direitos, entre em contato conosco através da página de <a href="/contato" className="text-emerald-700 hover:underline">Contato</a>.
+            Para exercer seus direitos, entre em contato conosco através da página de <Link href="/contato" className="text-emerald-700 hover:underline">Contato</Link>.
           </p>
         </section>
 
@@ -136,7 +137,7 @@ export default function PrivacidadePage() {
           <h2 className="text-xl font-semibold text-slate-900 mb-3">11. Contato</h2>
           <p className="text-slate-700 mb-4">
             Se tiver dúvidas sobre esta Política de Privacidade, entre em contato conosco através da nossa página de
-            <a href="/contato" className="text-emerald-700 hover:underline">Contato</a>.
+            <Link href="/contato" className="text-emerald-700 hover:underline">Contato</Link>.
           </p>
         </section>
       </div>

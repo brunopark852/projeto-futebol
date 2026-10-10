@@ -1,0 +1,121 @@
+
+> projeto-futebol@0.1.0 dev
+> next dev
+
+▲ Next.js 16.3.7 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.9:3000
+- Environments: .env.local
+✓ Ready in 364ms
+✓ Running next.config.ts took 36ms
+
+ GET / 200 in 654ms (next.js: 607ms, application-code: 46ms)
+✓ Compiled in 48ms
+ GET /noticias 200 in 890ms (next.js: 863ms, application-code: 27ms)
+ GET /noticias 200 in 53ms (next.js: 15ms, application-code: 38ms)
+ GET / 200 in 102ms (next.js: 60ms, application-code: 42ms)
+[browser] AdSense head tag doesn't support data-nscript attribute. (https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX:223:304)
+ GET /api/ao-vivo 304 in 805ms (next.js: 54ms, application-code: 751ms)
+ GET /_next/data/development/tabela.json 304 in 434ms (next.js: 25ms, application-code: 408ms)
+ GET /tabela 200 in 726ms (next.js: 4ms, application-code: 722ms)
+[browser] AdSense head tag doesn't support data-nscript attribute. (https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX:223:304)
+ GET /_next/data/development/tabela.json 304 in 164ms (next.js: 5ms, application-code: 158ms)
+ GET /_next/data/development/tabela.json 304 in 159ms (next.js: 5ms, application-code: 154ms)
+ GET /_next/data/development/ao-vivo.json 304 in 278ms (next.js: 29ms, application-code: 249ms)
+ GET /_next/data/development/artilheiros.json 304 in 265ms (next.js: 40ms, application-code: 225ms)
+[browser] Error fetching news: Error: HTTP error! status: 401
+    at Noticias.useEffect.fetchNews (pages/noticias.tsx:33:17)
+  31 |
+  32 |         if (!response.ok) {
+> 33 |           throw new Error(`HTTP error! status: ${response.status}`);
+     |                 ^
+  34 |         }
+  35 |
+  36 |         const data = await response.json();
+ GET /_next/data/development/artilheiros.json 304 in 484ms (next.js: 3ms, application-code: 481ms)
+ GET /_next/data/development/ao-vivo.json 304 in 194ms (next.js: 3ms, application-code: 191ms)
+ GET /_next/data/development/tabela.json 304 in 235ms (next.js: 3ms, application-code: 232ms)
+✓ Compiled in 72ms
+ GET /noticias 200 in 66ms (next.js: 39ms, application-code: 27ms)
+ GET /_next/data/development/tabela.json 304 in 400ms (next.js: 5ms, application-code: 395ms)
+ GET /_next/data/development/tabela.json 304 in 160ms (next.js: 5ms, application-code: 155ms)
+ GET /_next/data/development/ao-vivo.json 304 in 1392ms (next.js: 4ms, application-code: 1387ms)
+ GET /_next/data/development/artilheiros.json 304 in 164ms (next.js: 4ms, application-code: 160ms)
+ GET /_next/data/development/tabela.json 304 in 232ms (next.js: 6ms, application-code: 226ms)
+ GET /tabela 200 in 581ms (next.js: 2ms, application-code: 579ms)
+ GET /tabela 200 in 502ms (next.js: 5ms, application-code: 497ms)
+ GET /ao-vivo 200 in 243ms (next.js: 2ms, application-code: 241ms)
+ GET /artilheiros 200 in 447ms (next.js: 4ms, application-code: 443ms)
+ GET /noticias 200 in 19ms (next.js: 2ms, application-code: 17ms)
+ GET /tabela 200 in 333ms (next.js: 2ms, application-code: 330ms)
+ GET / 304 in 64ms (next.js: 3ms, application-code: 61ms)
+[browser] AdSense head tag doesn't support data-nscript attribute. (https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX:223:304)
+ GET /api/ao-vivo 304 in 449ms (next.js: 6ms, application-code: 443ms)
+ GET /_next/data/development/tabela.json 304 in 206ms (next.js: 3ms, application-code: 202ms)
+✓ Compiled in 57ms
+✓ Compiled in 29ms
+✓ Compiled in 41ms
+✓ Compiled in 28ms
+ GET / 200 in 116ms (next.js: 68ms, application-code: 48ms)
+✓ Compiled in 32ms
+ GET / 200 in 94ms (next.js: 50ms, application-code: 44ms)
+ GET / 200 in 46ms (next.js: 6ms, application-code: 40ms)
+ GET /api/ao-vivo 500 in 14ms (next.js: 1.6ms, application-code: 12ms)
+[browser] Erro ao buscar jogos: AxiosError: Request failed with status code 500
+[browser] AdSense head tag doesn't support data-nscript attribute. (https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX:223:304)
+✓ Compiled in 88ms
+✓ Compiled in 67ms
+ GET / 200 in 108ms (next.js: 66ms, application-code: 42ms)
+ GET / 200 in 60ms (next.js: 4ms, application-code: 56ms)
+[browser] AdSense head tag doesn't support data-nscript attribute. (https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX:223:304)
+ GET /api/ao-vivo 200 in 341ms (next.js: 1.7ms, application-code: 340ms)
+ GET /_next/data/development/ao-vivo.json 304 in 339ms (next.js: 46ms, application-code: 294ms)
+ GET /api/ao-vivo 304 in 141ms (next.js: 1.7ms, application-code: 139ms)
+ GET /_next/data/development/artilheiros.json 304 in 245ms (next.js: 46ms, application-code: 199ms)
+ GET /api/ao-vivo 304 in 352ms (next.js: 2.0ms, application-code: 350ms)
+ GET /_next/data/development/tabela.json 304 in 182ms (next.js: 44ms, application-code: 138ms)
+ GET /api/ao-vivo 304 in 267ms (next.js: 2ms, application-code: 264ms)
+ GET /_next/data/development/ao-vivo.json 304 in 324ms (next.js: 5ms, application-code: 319ms)
+ GET /api/ao-vivo 304 in 285ms (next.js: 2ms, application-code: 283ms)
+✓ Compiled in 69ms
+ GET / 200 in 124ms (next.js: 59ms, application-code: 66ms)
+ GET / 200 in 52ms (next.js: 6ms, application-code: 46ms)
+[browser] AdSense head tag doesn't support data-nscript attribute. (https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX:223:304)
+ GET /api/ao-vivo 304 in 353ms (next.js: 1.7ms, application-code: 352ms)
+ GET / 304 in 60ms (next.js: 5ms, application-code: 55ms)
+[browser] AdSense head tag doesn't support data-nscript attribute. (https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX:223:304)
+ GET /api/ao-vivo 304 in 177ms (next.js: 1.7ms, application-code: 175ms)
+ GET / 304 in 61ms (next.js: 7ms, application-code: 55ms)
+[browser] AdSense head tag doesn't support data-nscript attribute. (https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX:223:304)
+ GET /api/ao-vivo 304 in 378ms (next.js: 1.4ms, application-code: 376ms)
+✓ Compiled in 33ms
+ GET / 200 in 105ms (next.js: 66ms, application-code: 39ms)
+[browser] AdSense head tag doesn't support data-nscript attribute. (https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX:223:304)
+ GET /api/ao-vivo 304 in 344ms (next.js: 2ms, application-code: 341ms)
+✓ Compiled in 52ms
+✓ Compiled in 49ms
+ GET / 304 in 106ms (next.js: 64ms, application-code: 42ms)
+[browser] AdSense head tag doesn't support data-nscript attribute. (https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX:223:304)
+ GET /api/ao-vivo 304 in 10.6s (next.js: 2ms, application-code: 10.6s)
+ GET / 304 in 47ms (next.js: 5ms, application-code: 42ms)
+[browser] AdSense head tag doesn't support data-nscript attribute. (https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX:223:304)
+ GET /api/ao-vivo 304 in 331ms (next.js: 1.5ms, application-code: 330ms)
+ GET /_next/data/development/ao-vivo.json 304 in 623ms (next.js: 63ms, application-code: 560ms)
+⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+▲ Next.js 16.3.7 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.9:3000
+- Environments: .env.local
+✓ Ready in 595ms
+✓ Running next.config.ts took 57ms
+
+⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+▲ Next.js 16.3.7 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.9:3000
+- Environments: .env.local
+✓ Ready in 504ms
+✓ Running next.config.ts took 60ms
+
+ GET / 200 in 1553ms (next.js: 1462ms, application-code: 91ms)
+[?25h

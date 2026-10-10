@@ -3,6 +3,7 @@ import Layout from '@/components/Layout';
 import AdSlot from '@/components/AdSlot';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
+import Image from 'next/image';
 
 interface TimeAPI {
   posicao: number;
@@ -32,10 +33,10 @@ interface TabelaPageProps {
 
 export default function TabelaPage({ tabela }: TabelaPageProps) {
   const campeonatoNome = 'Brasileirão Série A';
-  const edicaoAtual = '2024';
+  const edicaoAtual = '2026';
 
   return (
-    <Layout title={`Tabela ${campeonatoNome} ${edicaoAtual} - Projeto Futebol`} description={`Classificação completa do ${campeonatoNome} ${edicaoAtual}`}>
+    <Layout title={`Tabela ${campeonatoNome} ${edicaoAtual} - Futebol`} description={`Classificação completa do ${campeonatoNome} ${edicaoAtual}`}>
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">{campeonatoNome} {edicaoAtual}</h1>
         <p className="text-slate-600 mt-1">Classificação oficial atualizada</p>
@@ -71,7 +72,7 @@ export default function TabelaPage({ tabela }: TabelaPageProps) {
                 <tr className="hover:bg-gray-50 transition-colors">
                   <td className="px-3 py-3 font-semibold text-slate-900">{time.posicao}º</td>
                   <td className="px-3 py-3 flex items-center gap-3">
-                    <img src={time.time.escudo} alt={time.time.nome_popular} className="escudo-pequeno" loading="lazy" />
+                    <Image src={time.time.escudo} alt={time.time.nome_popular} className="escudo-pequeno" loading="lazy" width={30} height={30} />
                     <span className="font-medium text-slate-900">{time.time.nome_popular}</span>
                     <span className="text-xs text-slate-400 font-semibold uppercase">{time.time.sigla}</span>
                   </td>
@@ -82,7 +83,7 @@ export default function TabelaPage({ tabela }: TabelaPageProps) {
                   <td className="px-3 py-3 text-right text-red-600 font-medium">{time.derrotas}</td>
                   <td className="px-3 py-3 text-right text-slate-600">{time.gols_pro}</td>
                   <td className="px-3 py-3 text-right text-slate-600">{time.gols_contra}</td>
-                  <td className="px-3 py-3 text-right font-medium {time.saldo_gols >= 0 ? 'text-emerald-700' : 'text-red-600'}">{time.saldo_gols >= 0 ? '+' : ''}{time.saldo_gols}</td>
+                  <td className={`px-3 py-3 text-right font-medium ${time.saldo_gols >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>{time.saldo_gols >= 0 ? '+' : ''}{time.saldo_gols}</td>
                   <td className="px-3 py-3 text-right text-slate-600">{time.aproveitamento}%</td>
                 </tr>
               </React.Fragment>
@@ -92,7 +93,7 @@ export default function TabelaPage({ tabela }: TabelaPageProps) {
       </div>
 
       <p className="mt-6 text-xs text-slate-500 text-center">
-        Dados fornecidos por <a href="https://api-futebol.com.br" target="_blank" rel="noopener noreferrer" className="text-emerald-700 hover:underline">API Futebol</a>. Atualizado em {new Date().toLocaleDateString('pt-BR')}.
+        Dados fornecidos por fontes confiáveis.
       </p>
     </Layout>
   );
@@ -112,8 +113,9 @@ export const getServerSideProps: GetServerSideProps<TabelaPageProps> = async () 
         tabela: response.data,
       },
     };
-  } catch (error: any) {
-    console.error('Erro ao buscar tabela:', error.response?.data || error.message);
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: unknown }; message?: string };
+    console.error('Erro ao buscar tabela:', err.response?.data || err.message);
     return {
       props: {
         tabela: [],

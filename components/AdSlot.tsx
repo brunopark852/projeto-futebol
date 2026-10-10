@@ -13,16 +13,16 @@ export default function AdSlot({ slot, className = '' }: AdSlotProps) {
   const labelStyles = 'text-xs text-slate-400 text-center mb-1 font-medium';
 
   if (process.env.NODE_ENV === 'development') {
-    const labels = {
-      header: 'Anúncio - Header (Leaderboard 728x90)',
-      table: 'Anúncio - In-Feed Tabela (Native)',
-      match: 'Anúncio - Match Lineup (300x250)',
+    const slotHeights = {
+      header: 'min-h-[90px]',    // 728x90 Leaderboard
+      table: 'min-h-[250px]',    // In-Feed Native
+      match: 'min-h-[250px]',    // 300x250 Medium Rectangle
     };
     return (
       <div className={`${slotStyles[slot]} ${className}`} role="complementary" aria-label="Publicidade">
-        <div className={labelStyles}>{labels[slot]}</div>
-        <div className="aspect-video bg-gray-100 border border-gray-200 rounded-lg flex items-center justify-center text-slate-400 text-sm font-mono">
-          [AdSlot: {slot}]
+        <div className={labelStyles}></div>
+        <div className={`bg-gray-100 border border-gray-200 rounded-lg flex items-center justify-center text-slate-400 text-sm font-mono ${slotHeights[slot]}`}>
+          
         </div>
       </div>
     );

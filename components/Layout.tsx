@@ -11,7 +11,7 @@ interface LayoutProps {
   description?: string;
 }
 
-export default function Layout({ children, title = 'Projeto Futebol', description = 'Portal de estatísticas e acompanhamento de futebol brasileiro em tempo real' }: LayoutProps) {
+export default function Layout({ children, title = 'Futebol', description = 'Portal de estatísticas e acompanhamento de futebol brasileiro em tempo real' }: LayoutProps) {
   return (
     <>
       <Head>

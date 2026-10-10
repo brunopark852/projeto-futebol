@@ -1,8 +1,8 @@
-import React from 'react';
 import Layout from '@/components/Layout';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface PartidaAPI {
   partida_id: number;
@@ -67,7 +67,7 @@ export default function AoVivoPage({ partidas }: AoVivoPageProps) {
   }).slice(-5).reverse();
 
   return (
-    <Layout title="Jogos Ao Vivo - Projeto Futebol" description="Acompanhe os jogos de futebol ao vivo: placares, tempo real e estatísticas das partidas.">
+    <Layout title="Jogos Ao Vivo - Futebol" description="Acompanhe os jogos de futebol ao vivo: placares, tempo real e estatísticas das partidas.">
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Jogos Ao Vivo</h1>
         <p className="text-slate-600 mt-1">Placares e eventos em tempo real</p>
@@ -85,7 +85,7 @@ export default function AoVivoPage({ partidas }: AoVivoPageProps) {
               <Link key={partida.partida_id} href={`/partida/${partida.partida_id}`} className="block bg-white rounded-lg border border-gray-200 p-4 hover:border-emerald-300 hover:shadow-md transition-all">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex-1 text-right mr-4 min-w-0">
-                    <img src={partida.time_mandante.escudo} alt={partida.time_mandante.nome_popular} className="escudo-medio mx-auto object-contain" loading="lazy" />
+                    <Image src={partida.time_mandante.escudo} alt={partida.time_mandante.nome_popular} className="escudo-medio mx-auto object-contain" loading="lazy" width={40} height={40} />
                     <p className="font-medium text-slate-900 text-sm mt-1 truncate">{partida.time_mandante.nome_popular}</p>
                     <p className="text-xs text-slate-400 uppercase">{partida.time_mandante.sigla}</p>
                   </div>
@@ -102,7 +102,7 @@ export default function AoVivoPage({ partidas }: AoVivoPageProps) {
                     <p className="text-xs text-slate-400 truncate w-full text-center">{partida.estadio.nome}</p>
                   </div>
                   <div className="flex-1 text-left ml-4 min-w-0">
-                    <img src={partida.time_visitante.escudo} alt={partida.time_visitante.nome_popular} className="escudo-medio mx-auto object-contain" loading="lazy" />
+                    <Image src={partida.time_visitante.escudo} alt={partida.time_visitante.nome_popular} className="escudo-medio mx-auto object-contain" loading="lazy" width={40} height={40} />
                     <p className="font-medium text-slate-900 text-sm mt-1 truncate">{partida.time_visitante.nome_popular}</p>
                     <p className="text-xs text-slate-400 uppercase">{partida.time_visitante.sigla}</p>
                   </div>
@@ -126,7 +126,7 @@ export default function AoVivoPage({ partidas }: AoVivoPageProps) {
               <Link key={partida.partida_id} href={`/partida/${partida.partida_id}`} className="block bg-white rounded-lg border border-gray-200 p-4 hover:border-emerald-300 hover:shadow-md transition-all">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex-1 text-right mr-4 min-w-0">
-                    <img src={partida.time_mandante.escudo} alt={partida.time_mandante.nome_popular} className="escudo-medio mx-auto object-contain" loading="lazy" />
+                    <Image src={partida.time_mandante.escudo} alt={partida.time_mandante.nome_popular} className="escudo-medio mx-auto object-contain" loading="lazy" width={40} height={40} />
                     <p className="font-medium text-slate-900 text-sm mt-1 truncate">{partida.time_mandante.nome_popular}</p>
                     <p className="text-xs text-slate-400 uppercase">{partida.time_mandante.sigla}</p>
                   </div>
@@ -139,7 +139,7 @@ export default function AoVivoPage({ partidas }: AoVivoPageProps) {
                     <p className="text-xs text-slate-400 truncate w-full text-center">{partida.estadio.nome}</p>
                   </div>
                   <div className="flex-1 text-left ml-4 min-w-0">
-                    <img src={partida.time_visitante.escudo} alt={partida.time_visitante.nome_popular} className="escudo-medio mx-auto object-contain" loading="lazy" />
+                    <Image src={partida.time_visitante.escudo} alt={partida.time_visitante.nome_popular} className="escudo-medio mx-auto object-contain" loading="lazy" width={40} height={40} />
                     <p className="font-medium text-slate-900 text-sm mt-1 truncate">{partida.time_visitante.nome_popular}</p>
                     <p className="text-xs text-slate-400 uppercase">{partida.time_visitante.sigla}</p>
                   </div>
@@ -163,7 +163,7 @@ export default function AoVivoPage({ partidas }: AoVivoPageProps) {
               <Link key={partida.partida_id} href={`/partida/${partida.partida_id}`} className="block bg-white rounded-lg border border-gray-200 p-4 hover:border-emerald-300 hover:shadow-md transition-all">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex-1 text-right mr-4 min-w-0">
-                    <img src={partida.time_mandante.escudo} alt={partida.time_mandante.nome_popular} className="escudo-medio mx-auto object-contain" loading="lazy" />
+                    <Image src={partida.time_mandante.escudo} alt={partida.time_mandante.nome_popular} className="escudo-medio mx-auto object-contain" loading="lazy" width={40} height={40} />
                     <p className="font-medium text-slate-900 text-sm mt-1 truncate">{partida.time_mandante.nome_popular}</p>
                     <p className="text-xs text-slate-400 uppercase">{partida.time_mandante.sigla}</p>
                   </div>
@@ -180,7 +180,7 @@ export default function AoVivoPage({ partidas }: AoVivoPageProps) {
                     <p className="text-xs text-slate-400 truncate w-full text-center">{partida.estadio.nome}</p>
                   </div>
                   <div className="flex-1 text-left ml-4 min-w-0">
-                    <img src={partida.time_visitante.escudo} alt={partida.time_visitante.nome_popular} className="escudo-medio mx-auto object-contain" loading="lazy" />
+                    <Image src={partida.time_visitante.escudo} alt={partida.time_visitante.nome_popular} className="escudo-medio mx-auto object-contain" loading="lazy" width={40} height={40} />
                     <p className="font-medium text-slate-900 text-sm mt-1 truncate">{partida.time_visitante.nome_popular}</p>
                     <p className="text-xs text-slate-400 uppercase">{partida.time_visitante.sigla}</p>
                   </div>
@@ -200,7 +200,7 @@ export default function AoVivoPage({ partidas }: AoVivoPageProps) {
       )}
 
       <p className="mt-6 text-xs text-slate-500 text-center">
-        Dados fornecidos por <a href="https://api-futebol.com.br" target="_blank" rel="noopener noreferrer" className="text-emerald-700 hover:underline">API Futebol</a>. Atualizado em {new Date().toLocaleDateString('pt-BR')}.
+        Dados fornecidos por fontes confiáveis.
       </p>
     </Layout>
   );
@@ -220,8 +220,9 @@ export const getServerSideProps: GetServerSideProps<AoVivoPageProps> = async () 
         partidas: response.data,
       },
     };
-  } catch (error: any) {
-    console.error('Erro ao buscar jogos ao vivo:', error.response?.data || error.message);
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: unknown }; message?: string };
+    console.error('Erro ao buscar jogos ao vivo:', err.response?.data || err.message);
     return {
       props: {
         partidas: [],
