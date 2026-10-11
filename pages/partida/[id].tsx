@@ -445,7 +445,7 @@ export default function PartidaPage({ partida, notFound }: PartidaPageProps) {
                           </div>
                         </div>
                       );
-                    })}
+                    );
                   </div>
                 </div>
               )}
@@ -473,7 +473,7 @@ export default function PartidaPage({ partida, notFound }: PartidaPageProps) {
                           </div>
                         </div>
                       );
-                    })}
+                    );
                   </div>
                 </div>
               )}
@@ -501,7 +501,7 @@ export default function PartidaPage({ partida, notFound }: PartidaPageProps) {
                           </div>
                         </div>
                       );
-                    })}
+                    );
                   </div>
                 </div>
               )}
