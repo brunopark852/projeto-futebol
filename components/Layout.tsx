@@ -22,7 +22,7 @@ export default function Layout({ children, title = 'Futebol', description = 'Por
       </Head>
       <Script
         strategy="lazyOnload"
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6873487845862850"
         crossOrigin="anonymous"
       />
       <div className="min-h-screen flex flex-col bg-gray-50 font-['Inter']">
