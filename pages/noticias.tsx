@@ -90,6 +90,20 @@ const Noticias: NextPage<NoticiasProps> = ({ initialNews, lastUpdated }) => {
     }
   };
 
+  // Prevenção rigorosa contra links maliciosos (javascript:, data:, vbscript:)
+  const getSafeUrl = (url?: string): string => {
+    if (!url) return '#';
+    try {
+      const parsed = new URL(url);
+      if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+        return url;
+      }
+    } catch {
+      return '#';
+    }
+    return '#';
+  };
+
   return (
     <Layout
       title="Notícias do Futebol Brasileiro - ge, UOL, Lance, ESPN - Futebol"
@@ -114,13 +128,14 @@ const Noticias: NextPage<NoticiasProps> = ({ initialNews, lastUpdated }) => {
 
           {/* Barra de Busca e Filtros */}
           <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs space-y-4">
-            {/* Campo de Busca */}
+            {/* Campo de Busca com limite seguro de caracteres */}
             <div className="relative">
               <input
                 type="text"
+                maxLength={80}
                 placeholder="Buscar notícias por time, jogador ou palavra-chave..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => setSearch(e.target.value.slice(0, 80))}
                 className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
               />
               <svg
@@ -250,10 +265,10 @@ const Noticias: NextPage<NoticiasProps> = ({ initialNews, lastUpdated }) => {
                     </h2>
                   </div>
 
-                  {/* Botão de Ação Externo */}
+                  {/* Botão de Ação Externo Sanitizado */}
                   <div className="pt-3 border-t border-gray-100 mt-auto">
                     <a
-                      href={item.url}
+                      href={getSafeUrl(item.url)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-between w-full text-xs font-semibold text-emerald-700 hover:text-emerald-800 hover:underline transition"

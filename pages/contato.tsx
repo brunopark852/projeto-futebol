@@ -14,11 +14,11 @@ export default function ContatoPage() {
           <form className="space-y-6" action="https://formspree.io/f/SEU_ID_AQUI" method="POST">
             <div>
               <label htmlFor="nome" className="block text-sm font-medium text-slate-700 mb-1">Nome completo *</label>
-              <input type="text" id="nome" name="nome" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition" />
+              <input type="text" id="nome" name="nome" maxLength={80} autoComplete="name" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition" />
             </div>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">E-mail *</label>
-              <input type="email" id="email" name="email" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition" />
+              <input type="email" id="email" name="email" maxLength={100} autoComplete="email" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition" />
             </div>
             <div>
               <label htmlFor="assunto" className="block text-sm font-medium text-slate-700 mb-1">Assunto *</label>
@@ -34,7 +34,7 @@ export default function ContatoPage() {
             </div>
             <div>
               <label htmlFor="mensagem" className="block text-sm font-medium text-slate-700 mb-1">Mensagem *</label>
-              <textarea id="mensagem" name="mensagem" rows={5} required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition resize-y" placeholder="Descreva sua solicitação..."></textarea>
+              <textarea id="mensagem" name="mensagem" rows={5} maxLength={2000} required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition resize-y" placeholder="Descreva sua solicitação..."></textarea>
             </div>
             <button type="submit" className="w-full bg-emerald-700 text-white py-3 px-6 rounded-lg font-semibold hover:bg-emerald-800 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition">
               Enviar Mensagem
