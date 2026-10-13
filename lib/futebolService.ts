@@ -1,20 +1,25 @@
 import { getCachedData } from './cacheStore';
 
 /**
- * Lê a tabela do cache persistente/memória
- * Nunca faz chamadas síncronas à API externa durante o acesso do usuário.
+ * Lê a tabela do cache persistente/memória (suporta Série A: 10 e Série B: 14)
  */
 export async function getTabela(campeonatoId = 10) {
   const cache = getCachedData();
-  return cache.tabela;
+  if (Number(campeonatoId) === 14) {
+    return cache.tabela_14 || [];
+  }
+  return cache.tabela || [];
 }
 
 /**
- * Lê os artilheiros do cache persistente/memória
+ * Lê os artilheiros do cache persistente/memória (suporta Série A: 10 e Série B: 14)
  */
 export async function getArtilheiros(campeonatoId = 10) {
   const cache = getCachedData();
-  return cache.artilheiros;
+  if (Number(campeonatoId) === 14) {
+    return cache.artilheiros_14 || [];
+  }
+  return cache.artilheiros || [];
 }
 
 /**
@@ -25,7 +30,7 @@ export async function getAoVivo() {
   if (Array.isArray(cache.aoVivo) && cache.aoVivo.length > 0) {
     return cache.aoVivo;
   }
-  return cache.partidas;
+  return cache.partidas || [];
 }
 
 /**
@@ -33,5 +38,8 @@ export async function getAoVivo() {
  */
 export async function getPartidas(campeonatoId = 10) {
   const cache = getCachedData();
-  return cache.partidas;
+  if (Number(campeonatoId) === 14) {
+    return cache.partidas_14 || [];
+  }
+  return cache.partidas || [];
 }

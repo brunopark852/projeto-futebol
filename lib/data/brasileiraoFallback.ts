@@ -697,3 +697,236 @@ export function getFallbackPartidas() {
     },
   ];
 }
+
+export const FALLBACK_TABELA_SERIE_B = [
+  {
+    posicao: 1,
+    pontos: 56,
+    time: { time_id: 63, nome_popular: 'Santos', sigla: 'SAN', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 31, vitorias: 16, empates: 8, derrotas: 7, gols_pro: 46, gols_contra: 25, saldo_gols: 21, aproveitamento: 60.2, variacao_posicao: 0, ultimos_jogos: ['v', 'v', 'e', 'd', 'v'], faixa_classificacao: 'Acesso à Série A'
+  },
+  {
+    posicao: 2,
+    pontos: 54,
+    time: { time_id: 153, nome_popular: 'Novorizontino', sigla: 'NOV', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 31, vitorias: 15, empates: 9, derrotas: 7, gols_pro: 35, gols_contra: 25, saldo_gols: 10, aproveitamento: 58.1, variacao_posicao: 0, ultimos_jogos: ['d', 'v', 'd', 'v', 'e'], faixa_classificacao: 'Acesso à Série A'
+  },
+  {
+    posicao: 3,
+    pontos: 53,
+    time: { time_id: 79, nome_popular: 'Sport', sigla: 'SPT', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 30, vitorias: 15, empates: 8, derrotas: 7, gols_pro: 40, gols_contra: 28, saldo_gols: 12, aproveitamento: 58.9, variacao_posicao: 0, ultimos_jogos: ['v', 'e', 'v', 'v', 'e'], faixa_classificacao: 'Acesso à Série A'
+  },
+  {
+    posicao: 4,
+    pontos: 50,
+    time: { time_id: 150, nome_popular: 'Mirassol', sigla: 'MIR', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 31, vitorias: 14, empates: 8, derrotas: 9, gols_pro: 30, gols_contra: 21, saldo_gols: 9, aproveitamento: 53.8, variacao_posicao: 0, ultimos_jogos: ['v', 'd', 'v', 'd', 'v'], faixa_classificacao: 'Acesso à Série A'
+  },
+  {
+    posicao: 5,
+    pontos: 48,
+    time: { time_id: 105, nome_popular: 'Ceará', sigla: 'CEA', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 31, vitorias: 14, empates: 6, derrotas: 11, gols_pro: 47, gols_contra: 37, saldo_gols: 10, aproveitamento: 51.6, variacao_posicao: 0, ultimos_jogos: ['v', 'v', 'd', 'v', 'd'], faixa_classificacao: null
+  },
+  {
+    posicao: 6,
+    pontos: 46,
+    time: { time_id: 221, nome_popular: 'Vila Nova', sigla: 'VIL', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 31, vitorias: 13, empates: 7, derrotas: 11, gols_pro: 33, gols_contra: 40, saldo_gols: -7, aproveitamento: 49.5, variacao_posicao: 0, ultimos_jogos: ['d', 'v', 'd', 'e', 'v'], faixa_classificacao: null
+  },
+  {
+    posicao: 7,
+    pontos: 45,
+    time: { time_id: 33, nome_popular: 'América-MG', sigla: 'AME', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 31, vitorias: 10, empates: 15, derrotas: 6, gols_pro: 38, gols_contra: 27, saldo_gols: 11, aproveitamento: 48.4, variacao_posicao: 0, ultimos_jogos: ['e', 'd', 'v', 'v', 'd'], faixa_classificacao: null
+  },
+  {
+    posicao: 8,
+    pontos: 44,
+    time: { time_id: 84, nome_popular: 'Coritiba', sigla: 'CFC', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 31, vitorias: 12, empates: 8, derrotas: 11, gols_pro: 33, gols_contra: 32, saldo_gols: 1, aproveitamento: 47.3, variacao_posicao: 0, ultimos_jogos: ['v', 'e', 'd', 'v', 'e'], faixa_classificacao: null
+  },
+  {
+    posicao: 9,
+    pontos: 42,
+    time: { time_id: 251, nome_popular: 'Amazonas', sigla: 'AMA', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 30, vitorias: 11, empates: 9, derrotas: 10, gols_pro: 27, gols_contra: 28, saldo_gols: -1, aproveitamento: 46.7, variacao_posicao: 0, ultimos_jogos: ['v', 'd', 'v', 'd', 'v'], faixa_classificacao: null
+  },
+  {
+    posicao: 10,
+    pontos: 42,
+    time: { time_id: 204, nome_popular: 'Operário-PR', sigla: 'OPE', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 30, vitorias: 12, empates: 6, derrotas: 12, gols_pro: 24, gols_contra: 25, saldo_gols: -1, aproveitamento: 46.7, variacao_posicao: 0, ultimos_jogos: ['e', 'v', 'e', 'd', 'v'], faixa_classificacao: null
+  },
+  {
+    posicao: 11,
+    pontos: 41,
+    time: { time_id: 115, nome_popular: 'Goiás', sigla: 'GOI', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 30, vitorias: 11, empates: 8, derrotas: 11, gols_pro: 41, gols_contra: 32, saldo_gols: 9, aproveitamento: 45.6, variacao_posicao: 0, ultimos_jogos: ['d', 'v', 'e', 'd', 'e'], faixa_classificacao: null
+  },
+  {
+    posicao: 12,
+    pontos: 40,
+    time: { time_id: 6, nome_popular: 'Avaí', sigla: 'AVA', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 31, vitorias: 11, empates: 7, derrotas: 13, gols_pro: 25, gols_contra: 28, saldo_gols: -3, aproveitamento: 43.0, variacao_posicao: 0, ultimos_jogos: ['e', 'd', 'e', 'd', 'v'], faixa_classificacao: null
+  },
+  {
+    posicao: 13,
+    pontos: 35,
+    time: { time_id: 59, nome_popular: 'Ponte Preta', sigla: 'PON', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 31, vitorias: 9, empates: 8, derrotas: 14, gols_pro: 32, gols_contra: 42, saldo_gols: -10, aproveitamento: 37.6, variacao_posicao: 0, ultimos_jogos: ['d', 'v', 'd', 'd', 'v'], faixa_classificacao: null
+  },
+  {
+    posicao: 14,
+    pontos: 35,
+    time: { time_id: 177, nome_popular: 'Botafogo-SP', sigla: 'BSP', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 30, vitorias: 8, empates: 11, derrotas: 11, gols_pro: 28, gols_contra: 40, saldo_gols: -12, aproveitamento: 38.9, variacao_posicao: 0, ultimos_jogos: ['e', 'd', 'e', 'd', 'e'], faixa_classificacao: null
+  },
+  {
+    posicao: 15,
+    pontos: 34,
+    time: { time_id: 113, nome_popular: 'Chapecoense', sigla: 'CHA', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 31, vitorias: 8, empates: 10, derrotas: 13, gols_pro: 24, gols_contra: 35, saldo_gols: -11, aproveitamento: 36.6, variacao_posicao: 0, ultimos_jogos: ['v', 'd', 'v', 'd', 'v'], faixa_classificacao: null
+  },
+  {
+    posicao: 16,
+    pontos: 33,
+    time: { time_id: 201, nome_popular: 'CRB', sigla: 'CRB', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 31, vitorias: 8, empates: 9, derrotas: 14, gols_pro: 30, gols_contra: 37, saldo_gols: -7, aproveitamento: 35.5, variacao_posicao: 0, ultimos_jogos: ['v', 'e', 'v', 'd', 'd'], faixa_classificacao: null
+  },
+  {
+    posicao: 17,
+    pontos: 33,
+    time: { time_id: 117, nome_popular: 'Paysandu', sigla: 'PAY', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 31, vitorias: 7, empates: 12, derrotas: 12, gols_pro: 31, gols_contra: 37, saldo_gols: -6, aproveitamento: 35.5, variacao_posicao: 0, ultimos_jogos: ['v', 'e', 'd', 'v', 'e'], faixa_classificacao: 'Rebaixamento para a Série C'
+  },
+  {
+    posicao: 18,
+    pontos: 31,
+    time: { time_id: 181, nome_popular: 'Ituano', sigla: 'ITU', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 31, vitorias: 9, empates: 4, derrotas: 18, gols_pro: 35, gols_contra: 52, saldo_gols: -17, aproveitamento: 33.3, variacao_posicao: 0, ultimos_jogos: ['d', 'd', 'd', 'v', 'd'], faixa_classificacao: 'Rebaixamento para a Série C'
+  },
+  {
+    posicao: 19,
+    pontos: 30,
+    time: { time_id: 219, nome_popular: 'Brusque', sigla: 'BRU', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 31, vitorias: 6, empates: 12, derrotas: 13, gols_pro: 21, gols_contra: 35, saldo_gols: -14, aproveitamento: 32.3, variacao_posicao: 0, ultimos_jogos: ['d', 'v', 'd', 'e', 'd'], faixa_classificacao: 'Rebaixamento para a Série C'
+  },
+  {
+    posicao: 20,
+    pontos: 25,
+    time: { time_id: 88, nome_popular: 'Guarani', sigla: 'GUA', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    jogos: 30, vitorias: 6, empates: 7, derrotas: 17, gols_pro: 30, gols_contra: 42, saldo_gols: -12, aproveitamento: 27.8, variacao_posicao: 0, ultimos_jogos: ['d', 'e', 'd', 'v', 'd'], faixa_classificacao: 'Rebaixamento para a Série C'
+  },
+];
+
+export const FALLBACK_ARTILHEIROS_SERIE_B = [
+  {
+    atleta: { atleta_id: 201, nome_popular: 'Caio Dantas', foto: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png', posicao: { nome: 'Atacante', sigla: 'ATA' } },
+    time: { time_id: 88, nome_popular: 'Guarani', sigla: 'GUA', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    gols: 10,
+  },
+  {
+    atleta: { atleta_id: 202, nome_popular: 'Erick Pulga', foto: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png', posicao: { nome: 'Atacante', sigla: 'ATA' } },
+    time: { time_id: 105, nome_popular: 'Ceará', sigla: 'CEA', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    gols: 10,
+  },
+  {
+    atleta: { atleta_id: 203, nome_popular: 'Aylon', foto: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png', posicao: { nome: 'Atacante', sigla: 'ATA' } },
+    time: { time_id: 105, nome_popular: 'Ceará', sigla: 'CEA', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    gols: 9,
+  },
+  {
+    atleta: { atleta_id: 204, nome_popular: 'Guilherme', foto: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png', posicao: { nome: 'Atacante', sigla: 'ATA' } },
+    time: { time_id: 63, nome_popular: 'Santos', sigla: 'SAN', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    gols: 9,
+  },
+  {
+    atleta: { atleta_id: 205, nome_popular: 'Anselmo Ramon', foto: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png', posicao: { nome: 'Atacante', sigla: 'ATA' } },
+    time: { time_id: 201, nome_popular: 'CRB', sigla: 'CRB', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    gols: 8,
+  },
+  {
+    atleta: { atleta_id: 206, nome_popular: 'Dellatorre', foto: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png', posicao: { nome: 'Atacante', sigla: 'ATA' } },
+    time: { time_id: 150, nome_popular: 'Mirassol', sigla: 'MIR', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    gols: 8,
+  },
+  {
+    atleta: { atleta_id: 207, nome_popular: 'Matheus Frizzo', foto: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png', posicao: { nome: 'Meia', sigla: 'MEI' } },
+    time: { time_id: 84, nome_popular: 'Coritiba', sigla: 'CFC', escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png' },
+    gols: 8,
+  },
+];
+
+export function getFallbackPartidasSerieB() {
+  const agora = new Date();
+  const d0 = new Date(agora);
+  const d1 = new Date(agora); d1.setDate(d1.getDate() + 1);
+
+  const formatIso = (d: Date, hora: string) => {
+    const ano = d.getFullYear();
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    const dia = String(d.getDate()).padStart(2, '0');
+    return `${ano}-${mes}-${dia}T${hora}:00-03:00`;
+  };
+
+  const formatDate = (d: Date) => {
+    const dia = String(d.getDate()).padStart(2, '0');
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    return `${dia}/${mes}/${d.getFullYear()}`;
+  };
+
+  return [
+    {
+      partida_id: 9201,
+      placar: '— x —',
+      placar_mandante: null,
+      placar_visitante: null,
+      status: 'agendado',
+      data_realizacao: formatDate(d0),
+      hora_realizacao: '20:00',
+      data_realizacao_iso: formatIso(d0, '20:00'),
+      data_hora: formatIso(d0, '20:00'),
+      estadio: { estadio_id: 11, nome_popular: 'Vila Belmiro', nome: 'Vila Belmiro', cidade: 'Santos' },
+      time_mandante: {
+        time_id: 63,
+        nome_popular: 'Santos',
+        sigla: 'SAN',
+        escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png',
+      },
+      time_visitante: {
+        time_id: 105,
+        nome_popular: 'Ceará',
+        sigla: 'CEA',
+        escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png',
+      },
+      campeonato: { campeonato_id: 14, nome: 'Brasileirão Série B', edicao_atual: '2026', slug: 'campeonato-brasileiro-serie-b' },
+    },
+    {
+      partida_id: 9202,
+      placar: '— x —',
+      placar_mandante: null,
+      placar_visitante: null,
+      status: 'agendado',
+      data_realizacao: formatDate(d1),
+      hora_realizacao: '19:00',
+      data_realizacao_iso: formatIso(d1, '19:00'),
+      data_hora: formatIso(d1, '19:00'),
+      estadio: { estadio_id: 12, nome_popular: 'Ilha do Retiro', nome: 'Ilha do Retiro', cidade: 'Recife' },
+      time_mandante: {
+        time_id: 79,
+        nome_popular: 'Sport',
+        sigla: 'SPT',
+        escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png',
+      },
+      time_visitante: {
+        time_id: 153,
+        nome_popular: 'Novorizontino',
+        sigla: 'NOV',
+        escudo: 'https://cdn.api-futebol.com.br/campeonatos/escudos/brasileiro-serieb.png',
+      },
+      campeonato: { campeonato_id: 14, nome: 'Brasileirão Série B', edicao_atual: '2026', slug: 'campeonato-brasileiro-serie-b' },
+    },
+  ];
+}

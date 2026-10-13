@@ -3,6 +3,7 @@ import Layout from '@/components/Layout';
 import AdSlot from '@/components/AdSlot';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { getArtilheiros } from '@/lib/futebolService';
 
 interface ArtilheiroAPI {
@@ -23,18 +24,47 @@ interface ArtilheiroAPI {
 
 interface ArtilheirosPageProps {
   artilheiros: ArtilheiroAPI[];
+  campeonatoId: number;
   campeonato: {
     nome: string;
     edicao_atual: string;
   };
 }
 
-export default function ArtilheirosPage({ artilheiros, campeonato }: ArtilheirosPageProps) {
+export default function ArtilheirosPage({ artilheiros, campeonato, campeonatoId }: ArtilheirosPageProps) {
+  const isSerieB = campeonatoId === 14;
+
   return (
     <Layout title={`Artilheiros ${campeonato.nome} ${campeonato.edicao_atual} - Futebol`} description={`Ranking de artilheiros do ${campeonato.nome} ${campeonato.edicao_atual}`}>
       <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Artilheiros - {campeonato.nome} {campeonato.edicao_atual}</h1>
-        <p className="text-slate-600 mt-1">Ranking de goleadores atualizado</p>
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Artilheiros - {campeonato.nome} {campeonato.edicao_atual}</h1>
+            <p className="text-slate-600 mt-1">Ranking de goleadores atualizado</p>
+          </div>
+          <div className="flex gap-2">
+            <Link
+              href="/artilheiros?id=10"
+              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+                !isSerieB
+                  ? 'bg-emerald-700 text-white shadow-sm'
+                  : 'bg-white border border-gray-200 text-slate-700 hover:bg-gray-50'
+              }`}
+            >
+              Série A
+            </Link>
+            <Link
+              href="/artilheiros?id=14"
+              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+                isSerieB
+                  ? 'bg-emerald-700 text-white shadow-sm'
+                  : 'bg-white border border-gray-200 text-slate-700 hover:bg-gray-50'
+              }`}
+            >
+              Série B
+            </Link>
+          </div>
+        </div>
       </div>
 
       <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
@@ -49,7 +79,7 @@ export default function ArtilheirosPage({ artilheiros, campeonato }: Artilheiros
           </thead>
           <tbody className="divide-y divide-gray-100">
             {artilheiros.map((artilheiro, index) => (
-              <React.Fragment key={artilheiro.atleta.atleta_id}>
+              <React.Fragment key={artilheiro.atleta.atleta_id || index}>
                 {index === 5 && (
                   <tr>
                     <td colSpan={4} className="px-3 py-2">
@@ -83,21 +113,25 @@ export default function ArtilheirosPage({ artilheiros, campeonato }: Artilheiros
       </div>
 
       <p className="mt-6 text-xs text-slate-500 text-center">
-        Dados fornecidos por fontes confiáveis.
+        Dados fornecidos por fontes oficiais do futebol brasileiro.
       </p>
     </Layout>
   );
 }
 
-export const getServerSideProps: GetServerSideProps<ArtilheirosPageProps> = async ({ res }) => {
+export const getServerSideProps: GetServerSideProps<ArtilheirosPageProps> = async ({ query, res }) => {
   res.setHeader('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=86400');
+  const campeonatoId = Number(query.id) === 14 ? 14 : 10;
+  const isSerieB = campeonatoId === 14;
+
   try {
-    const artilheiros = await getArtilheiros(10);
+    const artilheiros = await getArtilheiros(campeonatoId);
     return {
       props: {
         artilheiros,
+        campeonatoId,
         campeonato: {
-          nome: 'Brasileirão Série A',
+          nome: isSerieB ? 'Brasileirão Série B' : 'Brasileirão Série A',
           edicao_atual: '2026',
         },
       },
@@ -105,11 +139,15 @@ export const getServerSideProps: GetServerSideProps<ArtilheirosPageProps> = asyn
   } catch (error: unknown) {
     const err = error as { message?: string };
     console.error('Erro ao buscar artilheiros:', err.message);
-    const artilheiros = await getArtilheiros(10);
+    const artilheiros = await getArtilheiros(campeonatoId);
     return {
       props: {
         artilheiros,
-        campeonato: { nome: 'Brasileirão Série A', edicao_atual: '2026' },
+        campeonatoId,
+        campeonato: {
+          nome: isSerieB ? 'Brasileirão Série B' : 'Brasileirão Série A',
+          edicao_atual: '2026',
+        },
       },
     };
   }

@@ -644,19 +644,20 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
   atualizadoEm: string;
 }> = async ({ res }) => {
   res.setHeader('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=86400');
-  const CAMPEONATO_PRINCIPAL_ID = 10; // Brasileirão Série A
+  const CAMPEONATO_SERIE_A_ID = 10;
+  const CAMPEONATO_SERIE_B_ID = 14;
 
   try {
-    const [partidasAoVivo, partidasCampeonato, tabela] = await Promise.all([
+    const [partidasAoVivo, partidasSerieA, partidasSerieB, tabelaA, tabelaB] = await Promise.all([
       getAoVivo(),
-      getPartidas(CAMPEONATO_PRINCIPAL_ID),
-      getTabela(CAMPEONATO_PRINCIPAL_ID),
+      getPartidas(CAMPEONATO_SERIE_A_ID),
+      getPartidas(CAMPEONATO_SERIE_B_ID),
+      getTabela(CAMPEONATO_SERIE_A_ID),
+      getTabela(CAMPEONATO_SERIE_B_ID),
     ]);
 
     // ===== Computar seções =====
 
-    // "Jogos de hoje" = partidas cuja data_realizacao_iso é HOJE (independente de status)
-    // Se não houver jogos hoje, mostra os próximos jogos (até 2 dias)
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
     const amanha = new Date(hoje);
@@ -664,7 +665,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
     const depoisDeAmanha = new Date(hoje);
     depoisDeAmanha.setDate(depoisDeAmanha.getDate() + 2);
 
-    const todasPartidas = [...partidasAoVivo, ...partidasCampeonato];
+    const todasPartidas = [...partidasAoVivo, ...partidasSerieA, ...partidasSerieB];
     let jogosHoje = todasPartidas
       .filter((p) => {
         try {
@@ -692,19 +693,15 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
     }
 
     if (jogosHoje.length === 0) {
-      // Se ainda vazio, pega os primeiros jogos disponíveis
-      jogosHoje = todasPartidas.slice(0, 5);
+      jogosHoje = todasPartidas.slice(0, 6);
     }
 
-    // Deduplicar por partida_id (priorizar a que veio do /ao-vivo)
     const jogosHojeUniq = Array.from(new Map(jogosHoje.map((j) => [j.partida_id, j])).values());
 
-    // "Ao vivo" — só status=andamento
     const jogosAoVivoList = partidasAoVivo.filter(
       (p: any) => p.status?.toLowerCase() === 'andamento',
     );
 
-    // "Odds por hora" — destaque: ao vivo + próximas do dia (até 6 cards)
     const oddsEmDestaque = [
       ...jogosAoVivoList,
       ...jogosHojeUniq
@@ -714,34 +711,55 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
       .filter((j: any, idx: number, self: any[]) => idx === self.findIndex((x: any) => x.partida_id === j.partida_id))
       .slice(0, 6);
 
-    // "Campeonatos Populares" — garantir estrutura válida
-    const top3 = (tabela || []).slice(0, 3);
-    const destaque = (tabela && tabela[0]) ?? null;
-    const timeUsuario = (tabela && tabela.find((t: any) => t.time?.nome_popular === 'Flamengo')) ?? (tabela && tabela[0]) ?? null;
+    // Campeonatos Populares: Série A e Série B
+    const top3A = (tabelaA || []).slice(0, 3);
+    const destaqueA = (tabelaA && tabelaA[0]) ?? null;
+    const timeUsuarioA = (tabelaA && tabelaA.find((t: any) => t.time?.nome_popular === 'Flamengo')) ?? destaqueA;
+
+    const top3B = (tabelaB || []).slice(0, 3);
+    const destaqueB = (tabelaB && tabelaB[0]) ?? null;
+    const timeUsuarioB = (tabelaB && tabelaB.find((t: any) => t.time?.nome_popular === 'Santos')) ?? destaqueB;
 
     const campeonatosPopulares: CampeonatoPopular[] = [
       {
-        id: CAMPEONATO_PRINCIPAL_ID,
+        id: CAMPEONATO_SERIE_A_ID,
         nome: 'Brasileirão Série A',
-        slug: 'brasileirao-serie-a',
-        destaque: destaque ?? {
-          posicao: 0,
-          pontos: 0,
-          jogos: 0,
-          vitorias: 0,
-          empates: 0,
-          derrotas: 0,
-          gols_pro: 0,
-          gols_contra: 0,
-          saldo_gols: 0,
-          aproveitamento: 0,
-          time: { time_id: 0, nome_popular: '—', sigla: '—', escudo: '' },
+        slug: 'campeonato-brasileiro',
+        destaque: destaqueA ?? {
+          posicao: 1,
+          pontos: 60,
+          jogos: 30,
+          vitorias: 18,
+          empates: 6,
+          derrotas: 6,
+          gols_pro: 50,
+          gols_contra: 26,
+          saldo_gols: 24,
+          aproveitamento: 66.7,
+          time: { time_id: 22, nome_popular: 'Botafogo', sigla: 'BOT', escudo: '' },
         },
-        top3:
-          top3.length > 0
-            ? top3
-            : [],
-        timeUsuario,
+        top3: top3A,
+        timeUsuario: timeUsuarioA,
+      },
+      {
+        id: CAMPEONATO_SERIE_B_ID,
+        nome: 'Brasileirão Série B',
+        slug: 'campeonato-brasileiro-serie-b',
+        destaque: destaqueB ?? {
+          posicao: 1,
+          pontos: 56,
+          jogos: 31,
+          vitorias: 16,
+          empates: 8,
+          derrotas: 7,
+          gols_pro: 46,
+          gols_contra: 25,
+          saldo_gols: 21,
+          aproveitamento: 60.2,
+          time: { time_id: 63, nome_popular: 'Santos', sigla: 'SAN', escudo: '' },
+        },
+        top3: top3B,
+        timeUsuario: timeUsuarioB,
       },
     ];
 
@@ -763,8 +781,8 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
   } catch (error) {
     console.error('Erro geral no getServerSideProps da home:', error);
     const [tabela, partidas] = await Promise.all([
-      getTabela(CAMPEONATO_PRINCIPAL_ID),
-      getPartidas(CAMPEONATO_PRINCIPAL_ID),
+      getTabela(10),
+      getPartidas(10),
     ]);
     const top3 = (tabela || []).slice(0, 3);
     const destaque = (tabela && tabela[0]) ?? null;
@@ -776,7 +794,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
         oddsEmDestaque: partidas.slice(0, 4),
         campeonatosPopulares: [
           {
-            id: CAMPEONATO_PRINCIPAL_ID,
+            id: 10,
             nome: 'Brasileirão Série A',
             slug: 'brasileirao-serie-a',
             destaque: destaque ?? {

@@ -5,14 +5,20 @@ import {
   FALLBACK_TABELA,
   FALLBACK_ARTILHEIROS,
   getFallbackPartidas,
+  FALLBACK_TABELA_SERIE_B,
+  FALLBACK_ARTILHEIROS_SERIE_B,
+  getFallbackPartidasSerieB,
 } from './data/brasileiraoFallback';
 
 const CACHE_FILE_PATH = path.join('/tmp', 'futebol_cache.json');
 
-interface CacheData {
+export interface CacheData {
   tabela: any[];
+  tabela_14: any[];
   artilheiros: any[];
+  artilheiros_14: any[];
   partidas: any[];
+  partidas_14: any[];
   aoVivo: any[];
   lastUpdated: string;
 }
@@ -24,7 +30,16 @@ function getInitialData(): CacheData {
       const raw = fs.readFileSync(CACHE_FILE_PATH, 'utf-8');
       const parsed = JSON.parse(raw);
       if (parsed && Array.isArray(parsed.tabela)) {
-        return parsed;
+        return {
+          tabela: parsed.tabela || FALLBACK_TABELA,
+          tabela_14: parsed.tabela_14 || FALLBACK_TABELA_SERIE_B,
+          artilheiros: parsed.artilheiros || FALLBACK_ARTILHEIROS,
+          artilheiros_14: parsed.artilheiros_14 || FALLBACK_ARTILHEIROS_SERIE_B,
+          partidas: parsed.partidas || getFallbackPartidas(),
+          partidas_14: parsed.partidas_14 || getFallbackPartidasSerieB(),
+          aoVivo: parsed.aoVivo || [],
+          lastUpdated: parsed.lastUpdated || new Date().toISOString(),
+        };
       }
     }
   } catch (err) {
@@ -34,8 +49,11 @@ function getInitialData(): CacheData {
   // Baseline inicial seguro
   return {
     tabela: FALLBACK_TABELA,
+    tabela_14: FALLBACK_TABELA_SERIE_B,
     artilheiros: FALLBACK_ARTILHEIROS,
+    artilheiros_14: FALLBACK_ARTILHEIROS_SERIE_B,
     partidas: getFallbackPartidas(),
+    partidas_14: getFallbackPartidasSerieB(),
     aoVivo: [],
     lastUpdated: new Date().toISOString(),
   };
@@ -51,7 +69,6 @@ export function getCachedData(): CacheData {
   }
 
   const data = getInitialData();
-  // Mantém em memória por tempo indefinido (atualizado apenas pelo cron/sync)
   cache.put('futebol_full_cache', data);
   return data;
 }
@@ -67,10 +84,8 @@ export function setCachedData(partial: Partial<CacheData>): CacheData {
     lastUpdated: new Date().toISOString(),
   };
 
-  // Salva em memória
   cache.put('futebol_full_cache', updated);
 
-  // Salva em disco em /tmp para sobrevivência entre execuções de lambdas quentes
   try {
     fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(updated), 'utf-8');
   } catch (err) {
