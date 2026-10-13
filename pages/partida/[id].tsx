@@ -233,34 +233,6 @@ export default function PartidaPage({ partida, notFound }: PartidaPageProps) {
     return periodo ? labels[periodo] : '';
   };
 
-  const agruparGols = (gols?: PartidaDetalheAPI['gols']) => {
-    const grupos: Record<string, typeof gols> = { mandante: [], visitante: [] };
-    if (!gols) return grupos;
-    gols.mandante?.forEach((g) => { if (!grupos.mandante) grupos.mandante = []; grupos.mandante!.push({...g, lado: 'mandante'}); });
-    gols.visitante?.forEach((g) => { if (!grupos.visitante) grupos.visitante = []; grupos.visitante!.push({...g, lado: 'visitante'}); });
-    return grupos;
-  };
-
-  const agruparEscalacao = (escalacao?: PartidaDetalheAPI['escalacoes']) => {
-    if (!escalacao) return { mandante: {} as Record<string, Array<{ atleta: { atleta_id: number; nome_popular: string }; camisa: string; ordem: number; posicao: { nome: string; sigla: string } | [] }>>, visitante: {} as Record<string, Array<{ atleta: { atleta_id: number; nome_popular: string }; camisa: string; ordem: number; posicao: { nome: string; sigla: string } | [] }>> };
-    const grupos: Record<string, { mandante: Record<string, Array<{ atleta: { atleta_id: number; nome_popular: string }; camisa: string; ordem: number; posicao: { nome: string; sigla: string } | [] }>>; visitante: Record<string, Array<{ atleta: { atleta_id: number; nome_popular: string }; camisa: string; ordem: number; posicao: { nome: string; sigla: string } | [] }>> }> = { mandante: {}, visitante: {} };
-    const ordemPosicoes = ['Goleiro', 'Zagueiro', 'Lateral', 'Volante', 'Meia', 'Atacante'];
-    
-    escalacao.mandante.titulares?.forEach((j) => {
-      const pos = j.posicao && !Array.isArray(j.posicao) && j.posicao.nome ? j.posicao.nome : 'Outros';
-      if (!grupos.mandante[pos]) grupos.mandante[pos] = [];
-      grupos.mandante[pos].push(j);
-    });
-    escalacao.visitante.titulares?.forEach((j) => {
-      const pos = j.posicao && !Array.isArray(j.posicao) && j.posicao.nome ? j.posicao.nome : 'Outros';
-      if (!grupos.visitante[pos]) grupos.visitante[pos] = [];
-      grupos.visitante[pos].push(j);
-    });
-    return grupos;
-  };
-
-  const golsAgrupados = agruparGols(partida.gols);
-  const escalacaoAgrupada = agruparEscalacao(partida.escalacoes);
   const ordemPosicoes = ['Goleiro', 'Zagueiro', 'Lateral', 'Volante', 'Meia', 'Atacante'];
 
   const campeonatoNome = partida.campeonato.edicao?.nome_popular || partida.campeonato.nome_popular || partida.campeonato.nome;
@@ -431,21 +403,22 @@ export default function PartidaPage({ partida, notFound }: PartidaPageProps) {
                       if (!subs || subs.length === 0) return null;
                       const siglaTime = lado === 'mandante' ? partida.time_mandante.sigla : partida.time_visitante.sigla;
                       return subs.map((sub, idx) => {
-                      const minutoFormatado = `${sub.minuto}'`;
-                      return (
-                        <div key={`${lado}-sub-${idx}`} className="flex items-center gap-3">
-                          <div className="flex-shrink-0 w-10 text-right text-sm font-medium text-slate-600 pt-0.5">
-                            {minutoFormatado}
+                        const minutoFormatado = `${sub.minuto}'`;
+                        return (
+                          <div key={`${lado}-sub-${idx}`} className="flex items-center gap-3">
+                            <div className="flex-shrink-0 w-10 text-right text-sm font-medium text-slate-600 pt-0.5">
+                              {minutoFormatado}
+                            </div>
+                            <div className="flex-1 flex items-center gap-2">
+                              <span className="text-sm text-slate-900">{sub.saiu.nome_popular}</span>
+                              <span className="text-slate-400">→</span>
+                              <span className="text-sm text-slate-900">{sub.entrou.nome_popular}</span>
+                              <span className="text-slate-500">({siglaTime})</span>
+                            </div>
                           </div>
-                          <div className="flex-1 flex items-center gap-2">
-                            <span className="text-sm text-slate-900">{sub.saiu.nome_popular}</span>
-                            <span className="text-slate-400">→</span>
-                            <span className="text-sm text-slate-900">{sub.entrou.nome_popular}</span>
-                            <span className="text-slate-500">({siglaTime})</span>
-                          </div>
-                        </div>
-                      );
-                    );
+                        );
+                      });
+                    })}
                   </div>
                 </div>
               )}
@@ -459,21 +432,22 @@ export default function PartidaPage({ partida, notFound }: PartidaPageProps) {
                       if (!cards || cards.length === 0) return null;
                       const siglaTime = lado === 'mandante' ? partida.time_mandante.sigla : partida.time_visitante.sigla;
                       return cards.map((card, idx) => {
-                      const minutoFormatado = card.minuto ? `${card.minuto}'` : "'";
-                      return (
-                        <div key={`${lado}-amarelo-${idx}`} className="flex items-center gap-3">
-                          <div className="flex-shrink-0 w-10 text-right text-sm font-medium text-slate-600 pt-0.5">
-                            {minutoFormatado}
+                        const minutoFormatado = card.minuto ? `${card.minuto}'` : "'";
+                        return (
+                          <div key={`${lado}-amarelo-${idx}`} className="flex items-center gap-3">
+                            <div className="flex-shrink-0 w-10 text-right text-sm font-medium text-slate-600 pt-0.5">
+                              {minutoFormatado}
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-sm text-slate-900">
+                                {card.atleta?.nome_popular || 'Comissão técnica'}
+                                <span className="text-slate-500 ml-1">({siglaTime})</span>
+                              </p>
+                            </div>
                           </div>
-                          <div className="flex-1">
-                            <p className="text-sm text-slate-900">
-                              {card.atleta?.nome_popular || 'Comissão técnica'}
-                              <span className="text-slate-500 ml-1">({siglaTime})</span>
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    );
+                        );
+                      });
+                    })}
                   </div>
                 </div>
               )}
@@ -487,21 +461,22 @@ export default function PartidaPage({ partida, notFound }: PartidaPageProps) {
                       if (!cards || cards.length === 0) return null;
                       const siglaTime = lado === 'mandante' ? partida.time_mandante.sigla : partida.time_visitante.sigla;
                       return cards.map((card, idx) => {
-                      const minutoFormatado = card.minuto ? `${card.minuto}'` : "'";
-                      return (
-                        <div key={`${lado}-vermelho-${idx}`} className="flex items-center gap-3">
-                          <div className="flex-shrink-0 w-10 text-right text-sm font-medium text-slate-600 pt-0.5">
-                            {minutoFormatado}
+                        const minutoFormatado = card.minuto ? `${card.minuto}'` : "'";
+                        return (
+                          <div key={`${lado}-vermelho-${idx}`} className="flex items-center gap-3">
+                            <div className="flex-shrink-0 w-10 text-right text-sm font-medium text-slate-600 pt-0.5">
+                              {minutoFormatado}
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-sm text-slate-900">
+                                {card.atleta?.nome_popular || 'Comissão técnica'}
+                                <span className="text-red-600 ml-1">({siglaTime})</span>
+                              </p>
+                            </div>
                           </div>
-                          <div className="flex-1">
-                            <p className="text-sm text-slate-900">
-                              {card.atleta?.nome_popular || 'Comissão técnica'}
-                              <span className="text-red-600 ml-1">({siglaTime})</span>
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    );
+                        );
+                      });
+                    })}
                   </div>
                 </div>
               )}

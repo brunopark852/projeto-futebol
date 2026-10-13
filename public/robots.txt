@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://projetofutebol.com.br/sitemap.xml
+Sitemap: https://futebolagora.blog/sitemap.xml
 
 # Disallow admin/private areas (none in this project)
 # Disallow: /api/

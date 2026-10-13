@@ -1,12 +1,13 @@
 import { GetServerSideProps } from 'next';
 
-const BASE_URL = 'https://projetofutebol.com.br';
+const BASE_URL = 'https://futebolagora.blog';
 
 const staticPages = [
   '',
   '/tabela',
   '/artilheiros',
   '/ao-vivo',
+  '/noticias',
   '/privacidade',
   '/termos',
   '/contato',

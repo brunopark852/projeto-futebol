@@ -49,21 +49,21 @@ export default function ContatoPage() {
               <svg className="w-6 h-6 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
             </div>
             <h3 className="font-semibold text-slate-900 mb-1">E-mail</h3>
-            <p className="text-slate-600 text-sm">contato@projetofutebol.com.br</p>
+            <p className="text-slate-600 text-sm">contato@futebolagora.blog</p>
           </div>
           <div className="bg-white rounded-xl border border-gray-200 p-6 text-center">
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
               <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /></svg>
             </div>
             <h3 className="font-semibold text-slate-900 mb-1">LGPD / Dados</h3>
-            <p className="text-slate-600 text-sm">dpo@projetofutebol.com.br</p>
+            <p className="text-slate-600 text-sm">dpo@futebolagora.blog</p>
           </div>
           <div className="bg-white rounded-xl border border-gray-200 p-6 text-center">
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
               <svg className="w-6 h-6 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
             </div>
             <h3 className="font-semibold text-slate-900 mb-1">Parcerias</h3>
-            <p className="text-slate-600 text-sm">parcerias@projetofutebol.com.br</p>
+            <p className="text-slate-600 text-sm">parcerias@futebolagora.blog</p>
           </div>
         </div>
 
@@ -72,7 +72,7 @@ export default function ContatoPage() {
           <dl className="space-y-4">
             <div>
               <dt className="font-medium text-slate-900">Como faço para exercer meus direitos LGPD?</dt>
-              <dd className="text-slate-600 mt-1">Envie um e-mail para <a href="mailto:dpo@projetofutebol.com.br" className="text-emerald-700 hover:underline">dpo@projetofutebol.com.br</a> com o assunto &quot;LGPD&quot; e descreva qual direito deseja exercer (acesso, correção, exclusão, etc.). Responderemos em até 15 dias.</dd>
+              <dd className="text-slate-600 mt-1">Envie um e-mail para <a href="mailto:dpo@futebolagora.blog" className="text-emerald-700 hover:underline">dpo@futebolagora.blog</a> com o assunto &quot;LGPD&quot; e descreva qual direito deseja exercer (acesso, correção, exclusão, etc.). Responderemos em até 15 dias.</dd>
             </div>
             <div>
               <dt className="font-medium text-slate-900">Os dados das partidas são em tempo real?</dt>

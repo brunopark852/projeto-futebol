@@ -103,13 +103,14 @@ npx tsc --noEmit
 | `API_FUTEBOL_KEY` | `.env.local` + Vercel | Chave da API Futebol (server-only) |
 | `NEXT_PUBLIC_ADSENSE_CLIENT` | Vercel (opcional) | Publisher ID AdSense |
 
-## Próximas Tarefas (Fase 4-5)
+## Status da Publicação (Fase 4-5)
 
-1. **AdSense Real**: Substituir placeholder `ca-pub-XXXX` pelo publisher ID real
-2. **Deploy Vercel**: Conectar repo → Add `API_FUTEBOL_KEY` env → Deploy
-3. **Domínio**: Apontar `projetofutebol.com.br` para Vercel nameservers
-4. **Search Console**: Verificar domínio + enviar `sitemap.xml`
-5. **Formulário Contato**: Configurar endpoint real (Formspree/Backend)
+- [x] **AdSense Real**: Configurado `ca-pub-6873487845862850` e arquivo `public/ads.txt`
+- [x] **Deploy Vercel**: Realizado com chave de produção `live_...`
+- [x] **Domínio Oficial**: `https://futebolagora.blog` (Cloudflare DNS apontando para Vercel)
+- [x] **SEO**: `robots.txt` e `sitemap.xml` dinâmico configurados com domínio oficial
+- [ ] **Google Search Console**: Enviar `https://futebolagora.blog/sitemap.xml`
+- [ ] **Formulário Contato**: Configurar endpoint real (Formspree/Backend) caso necessário
 
 ## Contatos dos Agentes
 
