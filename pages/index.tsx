@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Layout from '@/components/Layout';
 import AdSlot from '@/components/AdSlot';
+import MatchPollWidget from '@/components/MatchPollWidget';
 import { GetServerSideProps } from 'next';
 import { getAoVivo, getPartidas, getTabela } from '@/lib/futebolService';
 
@@ -615,21 +616,7 @@ export default function Home({
       </div>
 
       <section className="mt-8 pt-6 border-t border-gray-200">
-        <div className="max-w-2xl mx-auto bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-2">
-              <span className="w-2 h-2 bg-emerald-600 rounded-full" aria-hidden="true"></span>
-              Rodadas e Confrontos
-            </h3>
-            <span className="text-xs text-slate-400">Brasileirão Série A</span>
-          </div>
-          <div className="overflow-hidden rounded-lg">
-            <div className="af-widget" data-af-widget="wgt_d82b7870f50777fd0eaac7e2ed86d8da" data-af-height="420">
-              <a href="https://api-futebol.com.br/?utm_source=widget&amp;utm_medium=embed&amp;utm_campaign=wgt_d82b">Tabela + Rodadas · Brasileirão Série A</a>
-            </div>
-          </div>
-          <script src="https://cdn.api-futebol.com.br/widgets/v3.js" async></script>
-        </div>
+        <MatchPollWidget matches={jogosHoje} />
       </section>
      </Layout>
    );
