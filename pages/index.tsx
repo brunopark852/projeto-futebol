@@ -613,12 +613,6 @@ export default function Home({
           </section>
         </aside>
       </div>
-
-      <div className="af-widget" data-af-widget="wgt_d82b7870f50777fd0eaac7e2ed86d8da" data-af-height="900">
-        <a href="https://api-futebol.com.br/?utm_source=widget&amp;utm_medium=embed&amp;utm_campaign=wgt_d82b">Tabela + Rodadas · Brasileirão Série A — dados por API Futebol</a>
-      </div>
-      <script src="https://cdn.api-futebol.com.br/widgets/v3.js" async></script>
-
      </Layout>
    );
 
