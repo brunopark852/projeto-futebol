@@ -1,9 +1,9 @@
 import React from 'react';
 import Layout from '@/components/Layout';
 import AdSlot from '@/components/AdSlot';
-import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
+import { getTabela } from '@/lib/futebolService';
 
 interface TimeAPI {
   posicao: number;
@@ -99,26 +99,22 @@ export default function TabelaPage({ tabela }: TabelaPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<TabelaPageProps> = async () => {
+export const getServerSideProps: GetServerSideProps<TabelaPageProps> = async ({ res }) => {
+  res.setHeader('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=86400');
   try {
-    const apiKey = process.env.API_FUTEBOL_KEY;
-    if (!apiKey) {
-      throw new Error('API_FUTEBOL_KEY não configurada');
-    }
-    const response = await axios.get('https://api.api-futebol.com.br/v1/campeonatos/10/tabela', {
-      headers: { Authorization: `Bearer ${apiKey}` },
-    });
+    const tabela = await getTabela(10);
     return {
       props: {
-        tabela: response.data,
+        tabela,
       },
     };
   } catch (error: unknown) {
-    const err = error as { response?: { data?: unknown }; message?: string };
-    console.error('Erro ao buscar tabela:', err.response?.data || err.message);
+    const err = error as { message?: string };
+    console.error('Erro ao buscar tabela:', err.message);
+    const tabela = await getTabela(10);
     return {
       props: {
-        tabela: [],
+        tabela,
       },
     };
   }

@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Layout from '@/components/Layout';
 import AdSlot from '@/components/AdSlot';
 import { GetServerSideProps } from 'next';
-import axios from 'axios';
+import { getAoVivo, getPartidas, getTabela } from '@/lib/futebolService';
 
 // ============================
 // Types — espelham a API Futebol
@@ -630,72 +630,16 @@ export default function Home({
 export const getServerSideProps: GetServerSideProps<HomeProps & {
   diaFormatado: string;
   atualizadoEm: string;
-}> = async () => {
+}> = async ({ res }) => {
+  res.setHeader('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=86400');
   const CAMPEONATO_PRINCIPAL_ID = 10; // Brasileirão Série A
 
   try {
-    // 1. Buscar jogos ao vivo
-    const aoVivoResp = await axios.get('http://localhost:3000/api/ao-vivo', {
-      // Em prod absoluto este servidor não chama a si mesmo;
-      // mas como getServerSideProps roda no mesmo processo, podemos
-      // chamar a URL interna. Em deploy Vercel, o host difere.
-      // Para robustez, usamos a chamada direta à API externa aqui também.
-      timeout: 8000,
-    }).catch(() => null);
-
-    const todasPartidasAoVivo: PartidaAPI[] = aoVivoResp?.data ?? [];
-
-    // Fallback: chamar a API externa direto (caso o proxy interno falhe)
-    let partidasAoVivo: PartidaAPI[] = todasPartidasAoVivo;
-    if (partidasAoVivo.length === 0) {
-      const directResp = await axios
-        .get('https://api.api-futebol.com.br/v1/ao-vivo', {
-          headers: { Authorization: `Bearer ${process.env.API_FUTEBOL_KEY}` },
-          timeout: 8000,
-        })
-        .catch(() => null);
-      partidasAoVivo = directResp?.data ?? [];
-    }
-
-    // 2. Buscar partidas do Brasileirão (próximas + recentes)
-    let partidasCampeonato: PartidaAPI[] = [];
-    try {
-      const campResp = await axios.get(
-        `https://api.api-futebol.com.br/v1/campeonatos/${CAMPEONATO_PRINCIPAL_ID}/partidas`,
-        {
-          headers: { Authorization: `Bearer ${process.env.API_FUTEBOL_KEY}` },
-          timeout: 8000,
-        },
-      );
-      // API retorna { campeonato: {...}, partidas: { "fase-unica": { "1a-rodada": [...], ... } } }
-      const partidasData = campResp.data?.partidas;
-      if (partidasData) {
-        Object.values(partidasData).forEach((fase: any) => {
-          Object.values(fase).forEach((rodada: unknown) => {
-            if (Array.isArray(rodada)) {
-              partidasCampeonato.push(...rodada);
-            }
-          });
-        });
-      }
-    } catch (err) {
-      console.error('Erro ao buscar partidas do campeonato:', (err as Error).message);
-    }
-
-    // 3. Buscar tabela do Brasileirão (para Campeonatos Populares)
-    let tabela: TimeAPI[] = [];
-    try {
-      const tabelaResp = await axios.get(
-        `https://api.api-futebol.com.br/v1/campeonatos/${CAMPEONATO_PRINCIPAL_ID}/tabela`,
-        {
-          headers: { Authorization: `Bearer ${process.env.API_FUTEBOL_KEY}` },
-          timeout: 8000,
-        },
-      );
-      tabela = tabelaResp.data ?? [];
-    } catch (err) {
-      console.error('Erro ao buscar tabela:', (err as Error).message);
-    }
+    const [partidasAoVivo, partidasCampeonato, tabela] = await Promise.all([
+      getAoVivo(),
+      getPartidas(CAMPEONATO_PRINCIPAL_ID),
+      getTabela(CAMPEONATO_PRINCIPAL_ID),
+    ]);
 
     // ===== Computar seções =====
 
@@ -712,13 +656,13 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
     let jogosHoje = todasPartidas
       .filter((p) => {
         try {
-          const d = new Date(p.data_realizacao_iso);
+          const d = new Date(p.data_realizacao_iso || p.data_hora);
           return d >= hoje && d < amanha;
         } catch {
           return false;
         }
       })
-      .sort((a, b) => new Date(a.data_realizacao_iso).getTime() - new Date(b.data_realizacao_iso).getTime());
+      .sort((a, b) => new Date(a.data_realizacao_iso || a.data_hora).getTime() - new Date(b.data_realizacao_iso || b.data_hora).getTime());
 
     // Se não houver jogos hoje, buscar próximos (amanhã e depois)
     let temJogosHojeReal = jogosHoje.length > 0;
@@ -726,13 +670,18 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
       jogosHoje = todasPartidas
         .filter((p) => {
           try {
-            const d = new Date(p.data_realizacao_iso);
+            const d = new Date(p.data_realizacao_iso || p.data_hora);
             return d >= amanha && d < depoisDeAmanha;
           } catch {
             return false;
           }
         })
-        .sort((a, b) => new Date(a.data_realizacao_iso).getTime() - new Date(b.data_realizacao_iso).getTime());
+        .sort((a, b) => new Date(a.data_realizacao_iso || a.data_hora).getTime() - new Date(b.data_realizacao_iso || b.data_hora).getTime());
+    }
+
+    if (jogosHoje.length === 0) {
+      // Se ainda vazio, pega os primeiros jogos disponíveis
+      jogosHoje = todasPartidas.slice(0, 5);
     }
 
     // Deduplicar por partida_id (priorizar a que veio do /ao-vivo)
@@ -740,24 +689,23 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
 
     // "Ao vivo" — só status=andamento
     const jogosAoVivoList = partidasAoVivo.filter(
-      (p) => p.status?.toLowerCase() === 'andamento',
+      (p: any) => p.status?.toLowerCase() === 'andamento',
     );
 
     // "Odds por hora" — destaque: ao vivo + próximas do dia (até 6 cards)
     const oddsEmDestaque = [
       ...jogosAoVivoList,
       ...jogosHojeUniq
-        .filter((j) => j.status?.toLowerCase() !== 'andamento')
-        .filter((j) => new Date(j.data_realizacao_iso).getTime() >= Date.now() - 60 * 60 * 1000)
+        .filter((j: any) => j.status?.toLowerCase() !== 'andamento')
         .slice(0, 6 - jogosAoVivoList.length),
     ]
-      .filter((j, idx, self) => idx === self.findIndex((x) => x.partida_id === j.partida_id))
+      .filter((j: any, idx: number, self: any[]) => idx === self.findIndex((x: any) => x.partida_id === j.partida_id))
       .slice(0, 6);
 
     // "Campeonatos Populares" — garantir estrutura válida
     const top3 = (tabela || []).slice(0, 3);
     const destaque = (tabela && tabela[0]) ?? null;
-    const timeUsuario = (tabela && tabela.find((t) => t.time?.nome_popular === 'Flamengo')) ?? (tabela && tabela[0]) ?? null;
+    const timeUsuario = (tabela && tabela.find((t: any) => t.time?.nome_popular === 'Flamengo')) ?? (tabela && tabela[0]) ?? null;
 
     const campeonatosPopulares: CampeonatoPopular[] = [
       {
@@ -802,12 +750,40 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
     };
   } catch (error) {
     console.error('Erro geral no getServerSideProps da home:', error);
+    const [tabela, partidas] = await Promise.all([
+      getTabela(CAMPEONATO_PRINCIPAL_ID),
+      getPartidas(CAMPEONATO_PRINCIPAL_ID),
+    ]);
+    const top3 = (tabela || []).slice(0, 3);
+    const destaque = (tabela && tabela[0]) ?? null;
+
     return {
       props: {
-        jogosHoje: [],
+        jogosHoje: partidas.slice(0, 5),
         jogosAoVivo: [],
-        oddsEmDestaque: [],
-        campeonatosPopulares: [],
+        oddsEmDestaque: partidas.slice(0, 4),
+        campeonatosPopulares: [
+          {
+            id: CAMPEONATO_PRINCIPAL_ID,
+            nome: 'Brasileirão Série A',
+            slug: 'brasileirao-serie-a',
+            destaque: destaque ?? {
+              posicao: 1,
+              pontos: 60,
+              jogos: 30,
+              vitorias: 18,
+              empates: 6,
+              derrotas: 6,
+              gols_pro: 50,
+              gols_contra: 26,
+              saldo_gols: 24,
+              aproveitamento: 66.7,
+              time: { time_id: 22, nome_popular: 'Botafogo', sigla: 'BOT', escudo: '' },
+            },
+            top3,
+            timeUsuario: destaque,
+          },
+        ],
         temJogosHoje: false,
         diaFormatado: new Date().toLocaleDateString('pt-BR', {
           weekday: 'long',

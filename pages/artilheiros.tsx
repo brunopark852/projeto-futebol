@@ -1,9 +1,9 @@
 import React from 'react';
 import Layout from '@/components/Layout';
 import AdSlot from '@/components/AdSlot';
-import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
+import { getArtilheiros } from '@/lib/futebolService';
 
 interface ArtilheiroAPI {
   atleta: {
@@ -89,18 +89,13 @@ export default function ArtilheirosPage({ artilheiros, campeonato }: Artilheiros
   );
 }
 
-export const getServerSideProps: GetServerSideProps<ArtilheirosPageProps> = async () => {
+export const getServerSideProps: GetServerSideProps<ArtilheirosPageProps> = async ({ res }) => {
+  res.setHeader('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=86400');
   try {
-    const apiKey = process.env.API_FUTEBOL_KEY;
-    if (!apiKey) {
-      throw new Error('API_FUTEBOL_KEY não configurada');
-    }
-    const response = await axios.get('https://api.api-futebol.com.br/v1/campeonatos/10/artilharia', {
-      headers: { Authorization: `Bearer ${apiKey}` },
-    });
+    const artilheiros = await getArtilheiros(10);
     return {
       props: {
-        artilheiros: response.data,
+        artilheiros,
         campeonato: {
           nome: 'Brasileirão Série A',
           edicao_atual: '2026',
@@ -108,12 +103,13 @@ export const getServerSideProps: GetServerSideProps<ArtilheirosPageProps> = asyn
       },
     };
   } catch (error: unknown) {
-    const err = error as { response?: { data?: unknown }; message?: string };
-    console.error('Erro ao buscar artilheiros:', err.response?.data || err.message);
+    const err = error as { message?: string };
+    console.error('Erro ao buscar artilheiros:', err.message);
+    const artilheiros = await getArtilheiros(10);
     return {
       props: {
-        artilheiros: [],
-        campeonato: { nome: 'Brasileirão Série A', edicao_atual: '2024' },
+        artilheiros,
+        campeonato: { nome: 'Brasileirão Série A', edicao_atual: '2026' },
       },
     };
   }

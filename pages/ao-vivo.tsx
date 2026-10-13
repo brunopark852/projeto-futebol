@@ -1,8 +1,8 @@
 import Layout from '@/components/Layout';
-import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getAoVivo } from '@/lib/futebolService';
 
 interface PartidaAPI {
   partida_id: number;
@@ -206,26 +206,22 @@ export default function AoVivoPage({ partidas }: AoVivoPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<AoVivoPageProps> = async () => {
+export const getServerSideProps: GetServerSideProps<AoVivoPageProps> = async ({ res }) => {
+  res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=86400');
   try {
-    const apiKey = process.env.API_FUTEBOL_KEY;
-    if (!apiKey) {
-      throw new Error('API_FUTEBOL_KEY não configurada');
-    }
-    const response = await axios.get('https://api.api-futebol.com.br/v1/ao-vivo', {
-      headers: { Authorization: `Bearer ${apiKey}` },
-    });
+    const partidas = await getAoVivo();
     return {
       props: {
-        partidas: response.data,
+        partidas,
       },
     };
   } catch (error: unknown) {
-    const err = error as { response?: { data?: unknown }; message?: string };
-    console.error('Erro ao buscar jogos ao vivo:', err.response?.data || err.message);
+    const err = error as { message?: string };
+    console.error('Erro ao buscar jogos ao vivo:', err.message);
+    const partidas = await getAoVivo();
     return {
       props: {
-        partidas: [],
+        partidas,
       },
     };
   }
