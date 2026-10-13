@@ -76,15 +76,15 @@ export default function ContatoPage() {
             </div>
             <div>
               <dt className="font-medium text-slate-900">Os dados das partidas são em tempo real?</dt>
-              <dd className="text-slate-600 mt-1">Buscamos atualizar o mais rápido possível via API Futebol, mas pode haver atrasos de alguns minutos. Não nos responsabilizamos por decisões baseadas nesses dados.</dd>
+              <dd className="text-slate-600 mt-1">Buscamos atualizar as informações esportivas o mais rápido possível a partir de fontes e federações oficiais, mas pode haver pequenas variações de minutos. Não nos responsabilizamos por decisões tomadas com base nesses dados.</dd>
             </div>
             <div>
               <dt className="font-medium text-slate-900">Posso usar os dados do site para meu projeto?</dt>
-              <dd className="text-slate-600 mt-1">Os dados pertencem às entidades organizadoras e são licenciados via API Futebol. Para uso comercial, entre em contato conosco para avaliar licenciamento adequado.</dd>
+              <dd className="text-slate-600 mt-1">As informações e marcas pertencem às respectivas entidades organizadoras e federações esportivas. Para propostas comerciais ou parcerias, entre em contato diretamente pelo e-mail de parcerias.</dd>
             </div>
             <div>
               <dt className="font-medium text-slate-900">Como funciona a publicidade no site?</dt>
-              <dd className="text-slate-600 mt-1">Utilizamos Google AdSense para exibir anúncios. Eles podem usar cookies para personalização. Veja nossa <Link href="/privacidade" className="text-emerald-700 hover:underline">Política de Privacidade</Link> para detalhes e como optar por não participar.</dd>
+              <dd className="text-slate-600 mt-1">Exibimos anúncios de parceiros publicitários para manter o portal gratuito e atualizado para todos os torcedores. Parceiros podem utilizar cookies para veiculação de anúncios. Consulte nossa <Link href="/privacidade" className="text-emerald-700 hover:underline">Política de Privacidade</Link> para mais detalhes e opções de gerenciamento.</dd>
             </div>
           </dl>
         </div>
