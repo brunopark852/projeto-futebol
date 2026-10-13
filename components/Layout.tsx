@@ -21,7 +21,7 @@ export default function Layout({ children, title = 'Futebol', description = 'Por
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Script
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6873487845862850"
         crossOrigin="anonymous"
       />
