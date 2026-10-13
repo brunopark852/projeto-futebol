@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sync:noticias": "node scripts/sync-noticias.js"
   },
   "dependencies": {
     "@types/memory-cache": "^0.2.6",

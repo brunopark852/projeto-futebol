@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { syncFutebolData } from '@/lib/syncService';
+import { syncNoticiasLive } from '@/lib/noticiasSync';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Verificação de segurança para o cron job (Vercel envia Authorization header)
   const cronSecret = process.env.CRON_SECRET;
   const authHeader = req.headers.authorization;
 
@@ -11,10 +11,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const result = await syncFutebolData();
+    const [futebolResult, noticiasResult] = await Promise.allSettled([
+      syncFutebolData(),
+      syncNoticiasLive(),
+    ]);
+
     return res.status(200).json({
       message: 'Sincronização agendada concluída com sucesso',
-      result,
+      futebol: futebolResult.status === 'fulfilled' ? futebolResult.value : { error: (futebolResult as any).reason?.message },
+      noticias: noticiasResult.status === 'fulfilled' ? noticiasResult.value : { error: (noticiasResult as any).reason?.message },
     });
   } catch (error: any) {
     console.error('[Cron Sync] Erro na sincronização:', error);
