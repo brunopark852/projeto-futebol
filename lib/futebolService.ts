@@ -42,7 +42,11 @@ export async function getArtilheiros(campeonatoId = 10) {
  */
 export async function getAoVivo() {
   const cache = await getCachedData();
-  const raw = Array.isArray(cache.aoVivo) && cache.aoVivo.length > 0 ? cache.aoVivo : cache.partidas;
+  const raw = Array.from(
+    new Map(
+      [...(cache.partidas || []), ...(cache.partidas_14 || []), ...(cache.aoVivo || [])].map((partida: any) => [partida.partida_id, partida]),
+    ).values(),
+  );
 
   return (raw || []).map((p: any) => ({
     ...p,
