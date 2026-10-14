@@ -11,16 +11,41 @@ jobs:
     steps:
       - name: Atualizar cache persistente de jogos ao vivo
         env:
-          API_FUTEBOL_KEY: ${{ secrets.API_FUTEBOL_KEY }}
+          FOOTBALL_DATA_API_TOKEN: ${{ secrets.FOOTBALL_DATA_API_TOKEN }}
           KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
           KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
         run: |
           set -euo pipefail
 
-          live_json=$(curl --fail --silent --show-error \
+          yesterday=$(date -u -d 'yesterday' +%F)
+          today=$(date -u +%F)
+          football_json=$(curl --fail --silent --show-error \
             --max-time 30 \
-            -H "Authorization: Bearer ${API_FUTEBOL_KEY}" \
-            https://api.api-futebol.com.br/v1/ao-vivo)
+            -H "X-Auth-Token: ${FOOTBALL_DATA_API_TOKEN}" \
+            "https://api.football-data.org/v4/competitions/BSA/matches?dateFrom=${yesterday}&dateTo=${today}")
+
+          fresh_matches=$(jq -c '
+            def status:
+              if . == "IN_PLAY" then "andamento"
+              elif . == "PAUSED" then "intervalo"
+              elif . == "FINISHED" then "encerrado"
+              elif . == "POSTPONED" then "adiado"
+              elif . == "CANCELLED" then "cancelado"
+              else "nao_iniciado" end;
+            [.matches[] | {
+              partida_id: .id,
+              data_realizacao_iso: .utcDate,
+              data_hora: .utcDate,
+              status: (.status | status),
+              placar_mandante: (.score.fullTime.home // null),
+              placar_visitante: (.score.fullTime.away // null),
+              placar: ((.score.fullTime.home // "-")|tostring) + " x " + ((.score.fullTime.away // "-")|tostring),
+              time_mandante: {time_id: .homeTeam.id, nome_popular: .homeTeam.name, sigla: (.homeTeam.tla // ""), escudo: (.homeTeam.crest // "")},
+              time_visitante: {time_id: .awayTeam.id, nome_popular: .awayTeam.name, sigla: (.awayTeam.tla // ""), escudo: (.awayTeam.crest // "")},
+              campeonato: {campeonato_id: .competition.id, nome: .competition.name, slug: "brasileirao-serie-a"},
+              estadio: {estadio_id: 0, nome_popular: (.venue // "")}
+            }]
+          ' <<< "${football_json}")
 
           cache_response=$(curl --fail --silent --show-error --retry 2 \
             --max-time 15 \
@@ -33,9 +58,11 @@ jobs:
             exit 1
           fi
 
-          updated_cache=$(jq -c --argjson live "${live_json}" \
-            '.aoVivo = $live | .lastUpdated = (now | todateiso8601)' \
-            <<< "${cache_json}")
+          updated_cache=$(jq -c --argjson fresh "${fresh_matches}" '
+            .partidas = ((.partidas + $fresh) | unique_by(.partida_id))
+            | .aoVivo = [$fresh[] | select(.status == "andamento" or .status == "intervalo")]
+            | .lastUpdated = (now | todateiso8601)
+          ' <<< "${cache_json}")
 
           command=$(jq -cn --arg key 'futebol:cache:v1' --arg value "${updated_cache}" \
             '["SET", $key, $value]')
