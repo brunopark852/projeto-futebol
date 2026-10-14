@@ -13,6 +13,10 @@ jobs:
         run: |
           curl --fail --silent --show-error --retry 2 \
             --max-time 30 \
-            -A 'GitHubActions/1.0' \
+            -A 'Mozilla/5.0 (compatible; LiveSync/1.0)' \
+            -H 'Accept: application/json' \
+            -H 'Content-Type: application/json' \
+            -H 'Referer: https://futebolagora.blog/ao-vivo' \
+            --http1.1 \
             -X POST \
             https://futebolagora.blog/api/cron/live
