@@ -64,7 +64,8 @@ jobs:
             | .lastUpdated = (now | todateiso8601)
           ' <<< "${cache_json}")
 
-          command=$(jq -cn --arg key 'futebol:cache:v1' --arg value "${updated_cache}" \
+          printf '%s' "${updated_cache}" > /tmp/updated-cache.json
+          command=$(jq -cn --arg key 'futebol:cache:v1' --rawfile value /tmp/updated-cache.json \
             '["SET", $key, $value]')
 
           curl --fail --silent --show-error --retry 2 \
