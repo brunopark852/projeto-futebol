@@ -102,7 +102,7 @@ export default function TabelaPage({ tabela, campeonatoId }: TabelaPageProps) {
                   <td className="px-3 py-3 font-semibold text-slate-900">{time.posicao}º</td>
                   <td className="px-3 py-3 flex items-center gap-3">
                     <Image src={time.time.escudo} alt={time.time.nome_popular} className="escudo-pequeno" loading="lazy" width={30} height={30} />
-                    <span className="font-medium text-slate-900">{time.time.nome_popular}</span>
+                    <Link href={`/times/${time.time.time_id}`} className="font-medium text-slate-900 hover:text-emerald-700 hover:underline">{time.time.nome_popular}</Link>
                     <span className="text-xs text-slate-400 font-semibold uppercase">{time.time.sigla}</span>
                   </td>
                   <td className="px-3 py-3 text-right font-bold text-slate-900">{time.pontos}</td>
