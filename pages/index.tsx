@@ -647,45 +647,29 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
 
     // ===== Computar seções =====
 
-    const hoje = new Date();
+    const agora = new Date();
+    const hoje = new Date(agora);
     hoje.setHours(0, 0, 0, 0);
     const amanha = new Date(hoje);
     amanha.setDate(amanha.getDate() + 1);
-    const depoisDeAmanha = new Date(hoje);
-    depoisDeAmanha.setDate(depoisDeAmanha.getDate() + 2);
 
     const todasPartidas = [...partidasAoVivo, ...partidasSerieA, ...partidasSerieB];
-    let jogosHoje = todasPartidas
+    const partidasFuturas = todasPartidas
       .filter((p) => {
-        try {
-          const d = new Date(p.data_realizacao_iso || p.data_hora);
-          return d >= hoje && d < amanha;
-        } catch {
-          return false;
-        }
+        const data = new Date(p.data_realizacao_iso || p.data_hora);
+        const status = String(p.status || '').toLowerCase();
+        return !Number.isNaN(data.getTime()) && data >= agora && !['finalizado', 'encerrado', 'cancelado'].includes(status);
       })
       .sort((a, b) => new Date(a.data_realizacao_iso || a.data_hora).getTime() - new Date(b.data_realizacao_iso || b.data_hora).getTime());
 
-    // Se não houver jogos hoje, buscar próximos (amanhã e depois)
-    let temJogosHojeReal = jogosHoje.length > 0;
-    if (!temJogosHojeReal) {
-      jogosHoje = todasPartidas
-        .filter((p) => {
-          try {
-            const d = new Date(p.data_realizacao_iso || p.data_hora);
-            return d >= amanha && d < depoisDeAmanha;
-          } catch {
-            return false;
-          }
-        })
-        .sort((a, b) => new Date(a.data_realizacao_iso || a.data_hora).getTime() - new Date(b.data_realizacao_iso || b.data_hora).getTime());
-    }
+    const jogosHoje = partidasFuturas.filter((p) => {
+      const data = new Date(p.data_realizacao_iso || p.data_hora);
+      return data >= hoje && data < amanha;
+    });
+    const temJogosHojeReal = jogosHoje.length > 0;
+    const jogosExibidos = (temJogosHojeReal ? jogosHoje : partidasFuturas).slice(0, 6);
 
-    if (jogosHoje.length === 0) {
-      jogosHoje = todasPartidas.slice(0, 6);
-    }
-
-    const jogosHojeUniq = Array.from(new Map(jogosHoje.map((j) => [j.partida_id, j])).values());
+    const jogosHojeUniq = Array.from(new Map(jogosExibidos.map((j) => [j.partida_id, j])).values());
 
     const jogosAoVivoList = partidasAoVivo.filter(
       (p: any) => p.status?.toLowerCase() === 'andamento',
