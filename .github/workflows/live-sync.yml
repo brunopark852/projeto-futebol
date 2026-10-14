@@ -68,10 +68,10 @@ jobs:
           command=$(jq -cn --arg key 'futebol:cache:v1' --rawfile value /tmp/updated-cache.json \
             '["SET", $key, $value]')
 
-          curl --fail --silent --show-error --retry 2 \
+          printf '%s' "${command}" | curl --fail --silent --show-error --retry 2 \
             --max-time 15 \
             -X POST \
             -H "Authorization: Bearer ${KV_REST_API_TOKEN}" \
             -H 'Content-Type: application/json' \
-            --data "${command}" \
+            --data-binary @- \
             "${KV_REST_API_URL}"
