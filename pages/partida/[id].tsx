@@ -5,6 +5,7 @@ import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import TacticalLineup from '@/components/TacticalLineup';
 
 interface PartidaDetalheAPI {
   partida_id: number;
@@ -233,8 +234,6 @@ export default function PartidaPage({ partida, notFound }: PartidaPageProps) {
     return periodo ? labels[periodo] : '';
   };
 
-  const ordemPosicoes = ['Goleiro', 'Zagueiro', 'Lateral', 'Volante', 'Meia', 'Atacante'];
-
   const campeonatoNome = partida.campeonato.edicao?.nome_popular || partida.campeonato.nome_popular || partida.campeonato.nome;
   const temporada = partida.campeonato.edicao?.temporada || '';
 
@@ -327,61 +326,16 @@ export default function PartidaPage({ partida, notFound }: PartidaPageProps) {
         </section>
       )}
 
-      {/* Escalações */}
-      {partida.escalacoes && (Object.keys(partida.escalacoes.mandante.titulares).length > 0 || Object.keys(partida.escalacoes.visitante.titulares).length > 0) && (
+      {/* Escalação tática */}
+      {partida.escalacoes && (
         <section className="mb-8">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Escalações</h2>
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-0">
-              <div className="p-4 border-r border-gray-200 md:border-r-0">
-                <h3 className="font-semibold text-slate-900 mb-3 pb-2 border-b border-gray-100 text-center md:text-right pr-4 md:pr-0">{partida.time_mandante.nome_popular}</h3>
-                <div className="space-y-2">
-                  {ordemPosicoes.map((pos) => {
-                    const jogadores = partida.escalacoes?.mandante.titulares.filter((j) => j.posicao && !Array.isArray(j.posicao) && j.posicao.nome === pos);
-                    if (!jogadores || jogadores.length === 0) return null;
-                    return (
-                      <div key={pos} className="flex flex-row-reverse gap-2 justify-end">
-                        <span className="text-xs text-slate-400 whitespace-nowrap mt-1">{pos}</span>
-                        <div className="flex-1 flex flex-col items-end gap-1">
-                          {jogadores.map((j) => (
-                            <div key={j.atleta.nome_popular} className="flex items-center gap-2 w-full justify-end">
-                              <span className="text-xs font-medium text-slate-600 w-6 text-right">{j.camisa}</span>
-                              <span className="text-sm text-slate-900 truncate">{j.atleta.nome_popular}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="hidden md:block w-24 flex flex-col items-center justify-center bg-gray-50 border-x border-gray-200 px-2">
-                <AdSlot slot="match" className="w-full" />
-              </div>
-              <div className="p-4 border-l border-gray-200 md:border-l-0">
-                <h3 className="font-semibold text-slate-900 mb-3 pb-2 border-b border-gray-100 text-center md:text-left pl-4 md:pl-0">{partida.time_visitante.nome_popular}</h3>
-                <div className="space-y-2">
-                  {ordemPosicoes.map((pos) => {
-                    const jogadores = partida.escalacoes?.visitante.titulares.filter((j) => j.posicao && !Array.isArray(j.posicao) && j.posicao.nome === pos);
-                    if (!jogadores || jogadores.length === 0) return null;
-                    return (
-                      <div key={pos} className="flex gap-2">
-                        <span className="text-xs text-slate-400 whitespace-nowrap mt-1">{pos}</span>
-                        <div className="flex-1 flex flex-col gap-1">
-                          {jogadores.map((j) => (
-                            <div key={j.atleta.nome_popular} className="flex items-center gap-2">
-                              <span className="text-xs font-medium text-slate-600 w-6">{j.camisa}</span>
-                              <span className="text-sm text-slate-900 truncate">{j.atleta.nome_popular}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
+          <h2 className="mb-4 text-xl font-bold text-slate-900">Escalação tática</h2>
+          <TacticalLineup
+            homeName={partida.time_mandante.nome_popular}
+            awayName={partida.time_visitante.nome_popular}
+            home={partida.escalacoes.mandante}
+            away={partida.escalacoes.visitante}
+          />
         </section>
       )}
 
