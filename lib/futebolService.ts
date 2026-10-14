@@ -1,4 +1,5 @@
 import { getCachedData } from './cacheStore';
+import { getFallbackPartidas, getFallbackPartidasSerieB } from './data/brasileiraoFallback';
 import { getEscudoClube, getFotoArtilheiro } from './data/clubesMap';
 
 /**
@@ -67,9 +68,16 @@ export async function getAoVivo() {
  */
 export async function getPartidas(campeonatoId = 10) {
   const cache = await getCachedData();
-  const raw = Number(campeonatoId) === 14 ? cache.partidas_14 : cache.partidas;
+  const isSerieB = Number(campeonatoId) === 14;
+  const raw = isSerieB ? cache.partidas_14 : cache.partidas;
+  const agora = Date.now();
+  const temPartidaFutura = (raw || []).some((p: any) => {
+    const data = new Date(p.data_realizacao_iso || p.data_hora).getTime();
+    return data >= agora && !['finalizado', 'encerrado', 'cancelado'].includes(String(p.status || '').toLowerCase());
+  });
+  const partidas = temPartidaFutura ? raw : (isSerieB ? getFallbackPartidasSerieB() : getFallbackPartidas());
 
-  return (raw || []).map((p: any) => ({
+  return (partidas || []).map((p: any) => ({
     ...p,
     time_mandante: {
       ...p.time_mandante,
