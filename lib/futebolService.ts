@@ -50,6 +50,7 @@ export async function getAoVivo() {
 
   return (raw || []).map((p: any) => ({
     ...p,
+    status: p.status?.toLowerCase() === 'finalizado' ? 'encerrado' : p.status?.toLowerCase() === 'agendado' ? 'nao_iniciado' : p.status,
     time_mandante: {
       ...p.time_mandante,
       escudo: getEscudoClube(p.time_mandante?.nome_popular, p.time_mandante?.escudo),

@@ -114,7 +114,7 @@ const INITIAL_VOTES: Record<number, { m: number; e: number; v: number; oddM: str
 };
 
 export default function MatchPollWidget({ matches }: { matches?: PollMatch[] }) {
-  const list = matches && matches.length > 0 ? matches : DEFAULT_POLL_MATCHES;
+  const list = matches ?? [];
   const [currentIndex, setCurrentIndex] = useState(0);
   const [votesMap, setVotesMap] = useState<Record<number, VoteState>>({});
   const [isVotedFeedback, setIsVotedFeedback] = useState<string | null>(null);
@@ -152,6 +152,8 @@ export default function MatchPollWidget({ matches }: { matches?: PollMatch[] }) 
     });
     setVotesMap(loaded);
   }, [list]);
+
+  if (!match) return null;
 
   const currentVotes = votesMap[partidaId] || {
     mandante: 14200,

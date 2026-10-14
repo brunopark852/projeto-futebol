@@ -207,7 +207,9 @@ export default function AoVivoPage({ partidas }: AoVivoPageProps) {
 }
 
 export const getServerSideProps: GetServerSideProps<AoVivoPageProps> = async ({ res }) => {
-  res.setHeader('Cache-Control', 'public, s-maxage=120, stale-while-revalidate=300');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  res.setHeader('CDN-Cache-Control', 'no-store');
+  res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
   try {
     const partidas = await getAoVivo();
     return {

@@ -630,7 +630,9 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
   diaFormatado: string;
   atualizadoEm: string;
 }> = async ({ res }) => {
-  res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  res.setHeader('CDN-Cache-Control', 'no-store');
+  res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
   const CAMPEONATO_SERIE_A_ID = 10;
   const CAMPEONATO_SERIE_B_ID = 14;
 

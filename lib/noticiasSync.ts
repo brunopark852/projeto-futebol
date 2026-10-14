@@ -156,13 +156,17 @@ export async function syncNoticiasLive() {
   const allRaw: any[] = [];
   for (const url of urls) {
     try {
+      console.log(`[SyncNoticias] Fetching ${url}...`);
       const xml = await fetchFeed(url);
+      console.log(`[SyncNoticias] Got ${xml.length} chars from ${url}`);
       const parsed = parseXmlItems(xml);
+      console.log(`[SyncNoticias] Parsed ${parsed.length} items from ${url}`);
       allRaw.push(...parsed);
     } catch (err: any) {
       console.warn(`[SyncNoticias] Erro no feed ${url}:`, err.message);
     }
   }
+  console.log(`[SyncNoticias] Total raw items: ${allRaw.length}`);
 
   const seenTitles = new Set<string>();
   const uniqueItems: any[] = [];

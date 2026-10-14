@@ -71,11 +71,11 @@ function getRedis(): Redis | null {
  */
 export async function getCachedData(): Promise<CacheData> {
   const inMemory = cache.get('futebol_full_cache') as CacheData | null;
-  if (inMemory) {
+  const redis = getRedis();
+  if (inMemory && !redis) {
     return inMemory;
   }
 
-  const redis = getRedis();
   if (redis) {
     try {
       const persisted = await redis.get<CacheData>(KV_CACHE_KEY);
