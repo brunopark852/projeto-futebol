@@ -39,7 +39,7 @@ jobs:
               status: (.status | status),
               placar_mandante: (.score.fullTime.home // null),
               placar_visitante: (.score.fullTime.away // null),
-              placar: ((.score.fullTime.home // "-")|tostring) + " x " + ((.score.fullTime.away // "-")|tostring),
+              placar: (((.score.fullTime.home // "-")|tostring) + " x " + ((.score.fullTime.away // "-")|tostring)),
               time_mandante: {time_id: .homeTeam.id, nome_popular: .homeTeam.name, sigla: (.homeTeam.tla // ""), escudo: (.homeTeam.crest // "")},
               time_visitante: {time_id: .awayTeam.id, nome_popular: .awayTeam.name, sigla: (.awayTeam.tla // ""), escudo: (.awayTeam.crest // "")},
               campeonato: {campeonato_id: .competition.id, nome: .competition.name, slug: "brasileirao-serie-a"},
