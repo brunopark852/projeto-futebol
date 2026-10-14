@@ -5,7 +5,7 @@ import { getEscudoClube, getFotoArtilheiro } from './data/clubesMap';
  * Lê a tabela do cache persistente/memória e garante escudos oficiais de alta resolução
  */
 export async function getTabela(campeonatoId = 10) {
-  const cache = getCachedData();
+  const cache = await getCachedData();
   const rawList = Number(campeonatoId) === 14 ? cache.tabela_14 : cache.tabela;
 
   return (rawList || []).map((t: any) => ({
@@ -21,7 +21,7 @@ export async function getTabela(campeonatoId = 10) {
  * Lê os artilheiros do cache persistente/memória com fotos e escudos reais
  */
 export async function getArtilheiros(campeonatoId = 10) {
-  const cache = getCachedData();
+  const cache = await getCachedData();
   const rawList = Number(campeonatoId) === 14 ? cache.artilheiros_14 : cache.artilheiros;
 
   return (rawList || []).map((a: any) => ({
@@ -41,7 +41,7 @@ export async function getArtilheiros(campeonatoId = 10) {
  * Lê partidas ao vivo ou recentes com escudos enriquecidos
  */
 export async function getAoVivo() {
-  const cache = getCachedData();
+  const cache = await getCachedData();
   const raw = Array.isArray(cache.aoVivo) && cache.aoVivo.length > 0 ? cache.aoVivo : cache.partidas;
 
   return (raw || []).map((p: any) => ({
@@ -61,7 +61,7 @@ export async function getAoVivo() {
  * Lê partidas do campeonato com escudos enriquecidos
  */
 export async function getPartidas(campeonatoId = 10) {
-  const cache = getCachedData();
+  const cache = await getCachedData();
   const raw = Number(campeonatoId) === 14 ? cache.partidas_14 : cache.partidas;
 
   return (raw || []).map((p: any) => ({

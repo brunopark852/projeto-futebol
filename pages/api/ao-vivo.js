@@ -43,6 +43,7 @@ export default async function handler(req, res) {
   }
 
   const cacheKey = 'ao-vivo';
+  res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
   const cached = getCached(cacheKey, 20000); // 20 seconds cache for live data
   if (cached !== null) {
     return res.status(200).json(cached);

@@ -1,0 +1,17 @@
+name: Atualizar jogos ao vivo
+
+on:
+  schedule:
+    - cron: '*/20 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sync-live:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Atualizar cache de jogos ao vivo
+        run: |
+          curl --fail --silent --show-error --retry 2 \
+            --max-time 30 \
+            -X POST \
+            https://futebolagora.blog/api/cron/live

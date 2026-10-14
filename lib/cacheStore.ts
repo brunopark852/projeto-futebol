@@ -1,6 +1,7 @@
 import cache from 'memory-cache';
 import fs from 'fs';
 import path from 'path';
+import { Redis } from '@upstash/redis';
 import {
   FALLBACK_TABELA,
   FALLBACK_ARTILHEIROS,
@@ -11,6 +12,7 @@ import {
 } from './data/brasileiraoFallback';
 
 const CACHE_FILE_PATH = path.join('/tmp', 'futebol_cache.json');
+const KV_CACHE_KEY = 'futebol:cache:v1';
 
 export interface CacheData {
   tabela: any[];
@@ -58,14 +60,32 @@ function getInitialData(): CacheData {
     lastUpdated: new Date().toISOString(),
   };
 }
+function getRedis(): Redis | null {
+  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  return url && token ? new Redis({ url, token }) : null;
+}
 
 /**
- * Retorna todos os dados atualmente em cache
+ * Retorna todos os dados atualmente em cache.
  */
-export function getCachedData(): CacheData {
-  const inMemory = cache.get('futebol_full_cache');
+export async function getCachedData(): Promise<CacheData> {
+  const inMemory = cache.get('futebol_full_cache') as CacheData | null;
   if (inMemory) {
     return inMemory;
+  }
+
+  const redis = getRedis();
+  if (redis) {
+    try {
+      const persisted = await redis.get<CacheData>(KV_CACHE_KEY);
+      if (persisted && Array.isArray(persisted.tabela)) {
+        cache.put('futebol_full_cache', persisted);
+        return persisted;
+      }
+    } catch (err) {
+      console.warn('[CacheStore] Falha ao ler cache persistente; usando fallback local:', err);
+    }
   }
 
   const data = getInitialData();
@@ -74,10 +94,10 @@ export function getCachedData(): CacheData {
 }
 
 /**
- * Salva novos dados no cache (em memória e em disco)
+ * Salva novos dados no cache persistente e mantém o fallback local.
  */
-export function setCachedData(partial: Partial<CacheData>): CacheData {
-  const current = getCachedData();
+export async function setCachedData(partial: Partial<CacheData>): Promise<CacheData> {
+  const current = await getCachedData();
   const updated: CacheData = {
     ...current,
     ...partial,
@@ -86,10 +106,19 @@ export function setCachedData(partial: Partial<CacheData>): CacheData {
 
   cache.put('futebol_full_cache', updated);
 
+  const redis = getRedis();
+  if (redis) {
+    try {
+      await redis.set(KV_CACHE_KEY, updated);
+    } catch (err) {
+      console.warn('[CacheStore] Falha ao escrever cache persistente; mantendo fallback local:', err);
+    }
+  }
+
   try {
     fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(updated), 'utf-8');
   } catch (err) {
-    console.warn('[CacheStore] Falha ao escrever cache no disco:', err);
+    console.warn('[CacheStore] Falha ao escrever cache local:', err);
   }
 
   return updated;

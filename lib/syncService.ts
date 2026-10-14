@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { setCachedData, getCachedData } from './cacheStore';
+import { setCachedData, CacheData } from './cacheStore';
 
 const BASE_URL = 'https://api.api-futebol.com.br/v1';
 
@@ -15,14 +15,13 @@ function getAuthHeaders() {
  */
 export async function syncFutebolData() {
   const headers = getAuthHeaders();
-  const current = getCachedData();
 
   if (!headers) {
     console.warn('[SyncService] API_FUTEBOL_KEY não configurada. Mantendo cache existente.');
     return { success: false, reason: 'Chave não configurada' };
   }
 
-  const updates: Partial<typeof current> = {};
+  const updates: Partial<CacheData> = {};
 
   // Sincroniza Série A (ID 10) e Série B (ID 14)
   const campeonatos = [
@@ -96,7 +95,7 @@ export async function syncFutebolData() {
   }
 
   // Grava todas as atualizações no cache
-  const saved = setCachedData(updates);
+  const saved = await setCachedData(updates);
   return {
     success: true,
     updatedKeys: Object.keys(updates),

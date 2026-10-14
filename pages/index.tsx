@@ -630,7 +630,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
   diaFormatado: string;
   atualizadoEm: string;
 }> = async ({ res }) => {
-  res.setHeader('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=86400');
+  res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
   const CAMPEONATO_SERIE_A_ID = 10;
   const CAMPEONATO_SERIE_B_ID = 14;
 
