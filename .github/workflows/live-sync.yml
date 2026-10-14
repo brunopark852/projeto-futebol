@@ -13,5 +13,6 @@ jobs:
         run: |
           curl --fail --silent --show-error --retry 2 \
             --max-time 30 \
+            -A 'GitHubActions/1.0' \
             -X POST \
             https://futebolagora.blog/api/cron/live
