@@ -122,35 +122,25 @@ export default function MatchPollWidget({ matches }: { matches?: PollMatch[] }) 
   const match = list[currentIndex] || list[0];
   const partidaId = match?.partida_id || 9101;
 
-  // Carregar votos salvos no localStorage
+  // Carrega a apuração global; o localStorage apenas impede voto duplicado neste navegador.
   useEffect(() => {
-    const loaded: Record<number, VoteState> = {};
-    list.forEach((m) => {
-      const pid = m.partida_id;
-      const base = INITIAL_VOTES[pid] || { m: 12000, e: 4000, v: 9000 };
+    let cancelled = false;
+    Promise.all(list.map(async (matchItem) => {
+      const pid = matchItem.partida_id;
       const stored = typeof window !== 'undefined' ? localStorage.getItem(`poll_vote_${pid}`) : null;
-      let userChoice: 'mandante' | 'empate' | 'visitante' | undefined = undefined;
-
-      let mCount = base.m;
-      let eCount = base.e;
-      let vCount = base.v;
-
-      if (stored === 'mandante' || stored === 'empate' || stored === 'visitante') {
-        userChoice = stored;
-        if (stored === 'mandante') mCount += 1;
-        if (stored === 'empate') eCount += 1;
-        if (stored === 'visitante') vCount += 1;
+      try {
+        const response = await fetch(`/api/polls/${pid}`);
+        if (!response.ok) throw new Error('Votação indisponível');
+        const votes = await response.json() as Omit<VoteState, 'userChoice'>;
+        return [pid, { ...votes, userChoice: stored || undefined }] as const;
+      } catch {
+        const base = INITIAL_VOTES[pid] || { m: 0, e: 0, v: 0 };
+        return [pid, { mandante: base.m, empate: base.e, visitante: base.v, total: base.m + base.e + base.v, userChoice: stored || undefined }] as const;
       }
-
-      loaded[pid] = {
-        mandante: mCount,
-        empate: eCount,
-        visitante: vCount,
-        total: mCount + eCount + vCount,
-        userChoice,
-      };
+    })).then((entries) => {
+      if (!cancelled) setVotesMap(Object.fromEntries(entries) as Record<number, VoteState>);
     });
-    setVotesMap(loaded);
+    return () => { cancelled = true; };
   }, [list]);
 
   if (!match) return null;
@@ -169,7 +159,7 @@ export default function MatchPollWidget({ matches }: { matches?: PollMatch[] }) 
 
   const oddsConfig = INITIAL_VOTES[partidaId] || { oddM: '1.91', oddE: '3.76', oddV: '3.76' };
 
-  const handleVote = (choice: 'mandante' | 'empate' | 'visitante') => {
+  const handleVote = async (choice: 'mandante' | 'empate' | 'visitante') => {
     if (currentVotes.userChoice) return; // Já votou nesta partida
 
     const updated: VoteState = {
@@ -179,17 +169,23 @@ export default function MatchPollWidget({ matches }: { matches?: PollMatch[] }) 
       userChoice: choice,
     };
 
-    setVotesMap((prev) => ({
-      ...prev,
-      [partidaId]: updated,
-    }));
-
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(`poll_vote_${partidaId}`, choice);
-    }
-
+    setVotesMap((prev) => ({ ...prev, [partidaId]: updated }));
+    if (typeof window !== 'undefined') localStorage.setItem(`poll_vote_${partidaId}`, choice);
     setIsVotedFeedback(choice);
     setTimeout(() => setIsVotedFeedback(null), 2500);
+
+    try {
+      const response = await fetch(`/api/polls/${partidaId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ choice }),
+      });
+      if (!response.ok) throw new Error('Falha ao registrar voto');
+      const votes = await response.json() as Omit<VoteState, 'userChoice'>;
+      setVotesMap((prev) => ({ ...prev, [partidaId]: { ...votes, userChoice: choice } }));
+    } catch (error) {
+      console.error('[Polls] Não foi possível sincronizar o voto:', error);
+    }
   };
 
   const prevMatch = () => {
