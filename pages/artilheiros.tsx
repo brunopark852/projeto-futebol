@@ -67,49 +67,70 @@ export default function ArtilheirosPage({ artilheiros, campeonato, campeonatoId 
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="px-3 py-3 text-left font-semibold text-slate-700 w-10">Pos</th>
-              <th className="px-3 py-3 text-left font-semibold text-slate-700">Jogador</th>
-              <th className="px-3 py-3 text-left font-semibold text-slate-700">Time</th>
-              <th className="px-3 py-3 text-right font-semibold text-slate-700 w-12">Gols</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {artilheiros.map((artilheiro, index) => (
-              <React.Fragment key={artilheiro.atleta.atleta_id || index}>
-                {index === 5 && (
-                  <tr>
-                    <td colSpan={4} className="px-3 py-2">
-                      <AdSlot slot="table" />
+      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+        <div className="hidden overflow-x-auto md:block">
+          <table className="w-full min-w-[520px] text-sm">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-3 py-3 text-left font-semibold text-slate-700 w-10">Pos</th>
+                <th className="px-3 py-3 text-left font-semibold text-slate-700">Jogador</th>
+                <th className="px-3 py-3 text-left font-semibold text-slate-700">Time</th>
+                <th className="px-3 py-3 text-right font-semibold text-slate-700 w-12">Gols</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {artilheiros.map((artilheiro, index) => (
+                <React.Fragment key={`desktop-${artilheiro.atleta.atleta_id || index}`}>
+                  {index === 5 && <tr><td colSpan={4} className="px-3 py-2"><AdSlot slot="table" /></td></tr>}
+                  <tr className="hover:bg-gray-50 transition-colors">
+                    <td className="px-3 py-3 font-semibold text-slate-900">{index + 1}º</td>
+                    <td className="px-3 py-3">
+                      <div className="flex items-center gap-3">
+                        {artilheiro.atleta.foto && <Image src={artilheiro.atleta.foto} alt={artilheiro.atleta.nome_popular} className="escudo-medio shrink-0 rounded-full object-cover" loading="lazy" width={50} height={50} />}
+                        <span className="font-medium text-slate-900">{artilheiro.atleta.nome_popular}</span>
+                      </div>
                     </td>
+                    <td className="px-3 py-3">
+                      <div className="flex items-center gap-2">
+                        <Image src={artilheiro.time.escudo} alt={artilheiro.time.nome_popular} className="escudo-pequeno shrink-0" loading="lazy" width={30} height={30} />
+                        <span className="text-slate-600 text-sm">{artilheiro.time.sigla}</span>
+                      </div>
+                    </td>
+                    <td className="px-3 py-3 text-right font-bold text-emerald-700 text-lg">{artilheiro.gols}</td>
                   </tr>
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <ol className="divide-y divide-gray-100 md:hidden" aria-label="Ranking de artilheiros">
+          {artilheiros.map((artilheiro, index) => (
+            <React.Fragment key={`mobile-${artilheiro.atleta.atleta_id || index}`}>
+              <li className="flex items-center gap-3 p-4">
+                <span className="w-8 shrink-0 text-center text-sm font-bold text-slate-500">
+                  {index + 1}º{index < 3 && <span className="block text-base leading-none" aria-label={['ouro', 'prata', 'bronze'][index]}>{['🥇', '🥈', '🥉'][index]}</span>}
+                </span>
+                {artilheiro.atleta.foto ? (
+                  <Image src={artilheiro.atleta.foto} alt="" aria-hidden="true" className="h-11 w-11 shrink-0 rounded-full object-cover" loading="lazy" width={44} height={44} />
+                ) : (
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-sm font-bold text-emerald-700" aria-hidden="true">{artilheiro.atleta.nome_popular.slice(0, 1)}</span>
                 )}
-                <tr className="hover:bg-gray-50 transition-colors">
-                  <td className="px-3 py-3 font-semibold text-slate-900">
-                    {index + 1}º
-                    {index === 0 && <span className="ml-1 text-yellow-500">🥇</span>}
-                    {index === 1 && <span className="ml-1 text-gray-400">🥈</span>}
-                    {index === 2 && <span className="ml-1 text-amber-700">🥉</span>}
-                  </td>
-                  <td className="px-3 py-3 flex items-center gap-3">
-                    {artilheiro.atleta.foto && (
-                      <Image src={artilheiro.atleta.foto} alt={artilheiro.atleta.nome_popular} className="escudo-medio rounded-full object-cover" loading="lazy" width={50} height={50} />
-                    )}
-                    <span className="font-medium text-slate-900">{artilheiro.atleta.nome_popular}</span>
-                  </td>
-                  <td className="px-3 py-3 flex items-center gap-2">
-                    <Image src={artilheiro.time.escudo} alt={artilheiro.time.nome_popular} className="escudo-pequeno" loading="lazy" width={30} height={30} />
-                    <span className="text-slate-600 text-sm">{artilheiro.time.sigla}</span>
-                  </td>
-                  <td className="px-3 py-3 text-right font-bold text-emerald-700 text-lg">{artilheiro.gols}</td>
-                </tr>
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
+                <div className="min-w-0 flex-1">
+                  <span className="block truncate font-semibold text-slate-900">{artilheiro.atleta.nome_popular}</span>
+                  <span className="mt-1 flex items-center gap-1.5 text-xs text-slate-600">
+                    <Image src={artilheiro.time.escudo} alt="" aria-hidden="true" className="escudo-pequeno shrink-0" loading="lazy" width={24} height={24} />
+                    {artilheiro.time.sigla}
+                  </span>
+                </div>
+                <div className="shrink-0 text-right">
+                  <span className="block text-xl font-bold leading-tight text-emerald-700">{artilheiro.gols}</span>
+                  <span className="text-[10px] font-semibold uppercase text-slate-500">gols</span>
+                </div>
+              </li>
+            </React.Fragment>
+          ))}
+        </ol>
       </div>
 
       <p className="mt-6 text-xs text-slate-500 text-center">

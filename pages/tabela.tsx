@@ -71,58 +71,95 @@ export default function TabelaPage({ tabela, campeonatoId }: TabelaPageProps) {
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="px-3 py-3 text-left font-semibold text-slate-700 w-10">Pos</th>
-              <th className="px-3 py-3 text-left font-semibold text-slate-700">Time</th>
-              <th className="px-3 py-3 text-right font-semibold text-slate-700 w-16">Pts</th>
-              <th className="px-3 py-3 text-right font-semibold text-slate-700 w-12">J</th>
-              <th className="px-3 py-3 text-right font-semibold text-slate-700 w-12">V</th>
-              <th className="px-3 py-3 text-right font-semibold text-slate-700 w-12">E</th>
-              <th className="px-3 py-3 text-right font-semibold text-slate-700 w-12">D</th>
-              <th className="px-3 py-3 text-right font-semibold text-slate-700 w-16">GP</th>
-              <th className="px-3 py-3 text-right font-semibold text-slate-700 w-16">GC</th>
-              <th className="px-3 py-3 text-right font-semibold text-slate-700 w-16">SG</th>
-              <th className="px-3 py-3 text-right font-semibold text-slate-700 w-24">%</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {tabela.map((time, index) => (
-              <React.Fragment key={time.time.time_id || index}>
-                {index === 10 && (
-                  <tr>
-                    <td colSpan={11} className="px-3 py-2">
-                      <AdSlot slot="table" />
+      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+        <div className="hidden overflow-x-auto md:block">
+          <table className="w-full min-w-[760px] text-sm">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-3 py-3 text-left font-semibold text-slate-700 w-10">Pos</th>
+                <th className="px-3 py-3 text-left font-semibold text-slate-700">Time</th>
+                <th className="px-3 py-3 text-right font-semibold text-slate-700 w-16">Pts</th>
+                <th className="px-3 py-3 text-right font-semibold text-slate-700 w-12">J</th>
+                <th className="px-3 py-3 text-right font-semibold text-slate-700 w-12">V</th>
+                <th className="px-3 py-3 text-right font-semibold text-slate-700 w-12">E</th>
+                <th className="px-3 py-3 text-right font-semibold text-slate-700 w-12">D</th>
+                <th className="px-3 py-3 text-right font-semibold text-slate-700 w-16">GP</th>
+                <th className="px-3 py-3 text-right font-semibold text-slate-700 w-16">GC</th>
+                <th className="px-3 py-3 text-right font-semibold text-slate-700 w-16">SG</th>
+                <th className="px-3 py-3 text-right font-semibold text-slate-700 w-24">%</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {tabela.map((time, index) => (
+                <React.Fragment key={`desktop-${time.time.time_id || index}`}>
+                  {index === 10 && (
+                    <tr>
+                      <td colSpan={11} className="px-3 py-2"><AdSlot slot="table" /></td>
+                    </tr>
+                  )}
+                  <tr className="hover:bg-gray-50 transition-colors">
+                    <td className="px-3 py-3 font-semibold text-slate-900">{time.posicao}º</td>
+                    <td className="px-3 py-3">
+                      <div className="flex items-center gap-3">
+                        <Image src={time.time.escudo} alt={time.time.nome_popular} className="escudo-pequeno shrink-0" loading="lazy" width={30} height={30} />
+                        {time.time.time_id > 0 ? (
+                          <Link href={`/times/${time.time.time_id}`} className="font-medium text-slate-900 hover:text-emerald-700 hover:underline">{time.time.nome_popular}</Link>
+                        ) : (
+                          <span className="font-medium text-slate-900">{time.time.nome_popular}</span>
+                        )}
+                        <span className="text-xs text-slate-400 font-semibold uppercase">{time.time.sigla}</span>
+                      </div>
                     </td>
+                    <td className="px-3 py-3 text-right font-bold text-slate-900">{time.pontos}</td>
+                    <td className="px-3 py-3 text-right text-slate-600">{time.jogos}</td>
+                    <td className="px-3 py-3 text-right text-emerald-700 font-medium">{time.vitorias}</td>
+                    <td className="px-3 py-3 text-right text-slate-500">{time.empates}</td>
+                    <td className="px-3 py-3 text-right text-red-600 font-medium">{time.derrotas}</td>
+                    <td className="px-3 py-3 text-right text-slate-600">{time.gols_pro}</td>
+                    <td className="px-3 py-3 text-right text-slate-600">{time.gols_contra}</td>
+                    <td className={`px-3 py-3 text-right font-medium ${time.saldo_gols >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>{time.saldo_gols >= 0 ? '+' : ''}{time.saldo_gols}</td>
+                    <td className="px-3 py-3 text-right text-slate-600">{time.aproveitamento}%</td>
                   </tr>
-                )}
-                <tr className="hover:bg-gray-50 transition-colors">
-                  <td className="px-3 py-3 font-semibold text-slate-900">{time.posicao}º</td>
-                  <td className="px-3 py-3 flex items-center gap-3">
-                    <Image src={time.time.escudo} alt={time.time.nome_popular} className="escudo-pequeno" loading="lazy" width={30} height={30} />
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="divide-y divide-gray-100 md:hidden">
+          {tabela.map((time, index) => (
+            <React.Fragment key={`mobile-${time.time.time_id || index}`}>
+              <article className="p-4" aria-label={`${time.posicao}º ${time.time.nome_popular}, ${time.pontos} pontos`}>
+                <div className="flex items-center gap-3">
+                  <span className="w-7 shrink-0 text-center text-sm font-bold text-slate-500">{time.posicao}º</span>
+                  <Image src={time.time.escudo} alt="" aria-hidden="true" className="escudo-pequeno shrink-0" loading="lazy" width={30} height={30} />
+                  <div className="min-w-0 flex-1">
                     {time.time.time_id > 0 ? (
-                      <Link href={`/times/${time.time.time_id}`} className="font-medium text-slate-900 hover:text-emerald-700 hover:underline">{time.time.nome_popular}</Link>
+                      <Link href={`/times/${time.time.time_id}`} className="block truncate font-semibold text-slate-900 hover:text-emerald-700">{time.time.nome_popular}</Link>
                     ) : (
-                      <span className="font-medium text-slate-900">{time.time.nome_popular}</span>
+                      <span className="block truncate font-semibold text-slate-900">{time.time.nome_popular}</span>
                     )}
-                    <span className="text-xs text-slate-400 font-semibold uppercase">{time.time.sigla}</span>
-                  </td>
-                  <td className="px-3 py-3 text-right font-bold text-slate-900">{time.pontos}</td>
-                  <td className="px-3 py-3 text-right text-slate-600">{time.jogos}</td>
-                  <td className="px-3 py-3 text-right text-emerald-700 font-medium">{time.vitorias}</td>
-                  <td className="px-3 py-3 text-right text-slate-500">{time.empates}</td>
-                  <td className="px-3 py-3 text-right text-red-600 font-medium">{time.derrotas}</td>
-                  <td className="px-3 py-3 text-right text-slate-600">{time.gols_pro}</td>
-                  <td className="px-3 py-3 text-right text-slate-600">{time.gols_contra}</td>
-                  <td className={`px-3 py-3 text-right font-medium ${time.saldo_gols >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>{time.saldo_gols >= 0 ? '+' : ''}{time.saldo_gols}</td>
-                  <td className="px-3 py-3 text-right text-slate-600">{time.aproveitamento}%</td>
-                </tr>
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
+                    <span className="text-xs font-semibold uppercase text-slate-400">{time.time.sigla}</span>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <span className="block text-xl font-bold leading-tight text-slate-900">{time.pontos}</span>
+                    <span className="text-[10px] font-semibold uppercase text-slate-500">pontos</span>
+                  </div>
+                </div>
+                <dl className="mt-3 grid grid-cols-4 gap-x-2 gap-y-2 rounded-lg bg-gray-50 p-3 text-center text-xs">
+                  <div><dt className="text-slate-500">J</dt><dd className="font-semibold text-slate-800">{time.jogos}</dd></div>
+                  <div><dt className="text-slate-500">V</dt><dd className="font-semibold text-emerald-700">{time.vitorias}</dd></div>
+                  <div><dt className="text-slate-500">E</dt><dd className="font-semibold text-slate-800">{time.empates}</dd></div>
+                  <div><dt className="text-slate-500">D</dt><dd className="font-semibold text-red-600">{time.derrotas}</dd></div>
+                  <div><dt className="text-slate-500">GP</dt><dd className="font-semibold text-slate-800">{time.gols_pro}</dd></div>
+                  <div><dt className="text-slate-500">GC</dt><dd className="font-semibold text-slate-800">{time.gols_contra}</dd></div>
+                  <div><dt className="text-slate-500">SG</dt><dd className={`font-semibold ${time.saldo_gols >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>{time.saldo_gols >= 0 ? '+' : ''}{time.saldo_gols}</dd></div>
+                  <div><dt className="text-slate-500">%</dt><dd className="font-semibold text-slate-800">{time.aproveitamento}%</dd></div>
+                </dl>
+              </article>
+            </React.Fragment>
+          ))}
+        </div>
       </div>
 
       <p className="mt-6 text-xs text-slate-500 text-center">
