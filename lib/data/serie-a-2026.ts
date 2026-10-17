@@ -1,0 +1,56 @@
+// Snapshot manual da Série A 2026 consultado em 2026-10-17.
+// Fonte: https://www.espn.com/soccer/standings/_/league/bra.1
+// Usar como fallback enquanto a API-Futebol não libera a tabela da Série A.
+// Remo não possui ID mapeado na API-Futebol; id 0 desativa o link de detalhe.
+const row = (
+  posicao: number,
+  pontos: number,
+  time_id: number,
+  nome_popular: string,
+  sigla: string,
+  jogos: number,
+  vitorias: number,
+  empates: number,
+  derrotas: number,
+  gols_pro: number,
+  gols_contra: number,
+  saldo_gols: number,
+) => ({
+  posicao,
+  pontos,
+  time: { time_id, nome_popular, sigla, escudo: '' },
+  jogos,
+  vitorias,
+  empates,
+  derrotas,
+  gols_pro,
+  gols_contra,
+  saldo_gols,
+  aproveitamento: Number(((pontos / (jogos * 3)) * 100).toFixed(1)),
+  variacao_posicao: 0,
+  ultimos_jogos: [] as string[],
+  faixa_classificacao: null as string | null,
+});
+
+export const FALLBACK_TABELA_SERIE_A_2026 = [
+  row(1, 64, 18, 'Flamengo', 'FLA', 30, 19, 7, 4, 58, 25, 33),
+  row(2, 63, 56, 'Palmeiras', 'PAL', 30, 18, 9, 3, 52, 22, 30),
+  row(3, 53, 3, 'Athletico-PR', 'CAP', 30, 15, 8, 7, 49, 35, 14),
+  row(4, 51, 26, 'Fluminense', 'FLU', 30, 14, 9, 7, 48, 37, 11),
+  row(5, 49, 68, 'Bahia', 'BAH', 30, 13, 10, 7, 44, 36, 8),
+  row(6, 48, 83, 'Cruzeiro', 'CRU', 30, 14, 6, 10, 46, 44, 2),
+  row(7, 47, 30, 'Atlético-MG', 'CAM', 30, 13, 8, 9, 41, 35, 6),
+  row(8, 42, 63, 'Santos', 'SAN', 30, 11, 9, 10, 46, 45, 1),
+  row(9, 40, 64, 'Red Bull Bragantino', 'RBB', 30, 11, 7, 12, 38, 35, 3),
+  row(10, 39, 57, 'São Paulo', 'SAO', 30, 11, 6, 13, 35, 35, 0),
+  row(11, 39, 84, 'Coritiba', 'CFC', 30, 10, 9, 11, 38, 48, -10),
+  row(12, 36, 102, 'Vitória', 'VIT', 30, 10, 6, 14, 33, 44, -11),
+  row(13, 36, 22, 'Botafogo', 'BOT', 30, 9, 9, 12, 43, 48, -5),
+  row(14, 36, 150, 'Mirassol', 'MIR', 31, 9, 9, 13, 36, 44, -8),
+  row(15, 35, 23, 'Vasco da Gama', 'VAS', 29, 9, 8, 12, 36, 42, -6),
+  row(16, 32, 65, 'Corinthians', 'COR', 30, 8, 8, 14, 31, 38, -7),
+  row(17, 32, 44, 'Internacional', 'INT', 31, 7, 11, 13, 33, 40, -7),
+  row(18, 31, 45, 'Grêmio', 'GRE', 30, 7, 10, 13, 32, 40, -8),
+  row(19, 25, 0, 'Remo', 'REM', 30, 5, 10, 15, 33, 48, -15),
+  row(20, 18, 113, 'Chapecoense', 'CHA', 29, 3, 9, 17, 30, 61, -31),
+];

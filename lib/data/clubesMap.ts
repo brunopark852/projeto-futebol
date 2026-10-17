@@ -25,6 +25,7 @@ export const ESCUDOS_CLUBES: Record<string, string> = {
   'Corinthians': '/escudos/corinthians.png',
   'Cuiabá': '/escudos/cuiaba.png',
   'Atlético-GO': '/escudos/atletico-go.png',
+  'Remo': '/escudos/remo.png',
 
   // Série B
   'Santos': '/escudos/santos.png',

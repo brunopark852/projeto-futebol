@@ -3,13 +3,13 @@ import fs from 'fs';
 import path from 'path';
 import { Redis } from '@upstash/redis';
 import {
-  FALLBACK_TABELA,
   FALLBACK_ARTILHEIROS,
   getFallbackPartidas,
   FALLBACK_TABELA_SERIE_B,
   FALLBACK_ARTILHEIROS_SERIE_B,
   getFallbackPartidasSerieB,
 } from './data/brasileiraoFallback';
+import { FALLBACK_TABELA_SERIE_A_2026 } from './data/serie-a-2026';
 
 const CACHE_FILE_PATH = path.join('/tmp', 'futebol_cache.json');
 const KV_CACHE_KEY = 'futebol:cache:v1';
@@ -33,7 +33,7 @@ function getInitialData(): CacheData {
       const parsed = JSON.parse(raw);
       if (parsed && Array.isArray(parsed.tabela)) {
         return {
-          tabela: parsed.tabela || FALLBACK_TABELA,
+          tabela: parsed.tabela || FALLBACK_TABELA_SERIE_A_2026,
           tabela_14: parsed.tabela_14 || FALLBACK_TABELA_SERIE_B,
           artilheiros: parsed.artilheiros || FALLBACK_ARTILHEIROS,
           artilheiros_14: parsed.artilheiros_14 || FALLBACK_ARTILHEIROS_SERIE_B,
@@ -50,7 +50,7 @@ function getInitialData(): CacheData {
 
   // Baseline inicial seguro
   return {
-    tabela: FALLBACK_TABELA,
+    tabela: FALLBACK_TABELA_SERIE_A_2026,
     tabela_14: FALLBACK_TABELA_SERIE_B,
     artilheiros: FALLBACK_ARTILHEIROS,
     artilheiros_14: FALLBACK_ARTILHEIROS_SERIE_B,
