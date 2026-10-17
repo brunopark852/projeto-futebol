@@ -12,7 +12,7 @@ export default function TermosPage() {
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-slate-900 mb-3">1. Aceitação dos Termos</h2>
           <p className="text-slate-700 mb-4">
-            Ao acessar ou utilizar o site Projeto Futebol ("nós", "nosso", "plataforma"), você concorda expressamente em cumprir e estar vinculado aos seguintes Termos de Uso e à nossa <Link href="/politica-privacidade" className="text-emerald-700 hover:underline">Política de Privacidade</Link>. Se você não concordar com qualquer parte destes termos, não deverá acessar nem utilizar nossos serviços.
+            Ao acessar ou utilizar o site Projeto Futebol ("nós", "nosso", "plataforma"), você concorda expressamente em cumprir e estar vinculado aos seguintes Termos de Uso e à nossa <Link href="/privacidade" className="text-emerald-700 hover:underline">Política de Privacidade</Link>. Se você não concordar com qualquer parte destes termos, não deverá acessar nem utilizar nossos serviços.
           </p>
         </section>
 
