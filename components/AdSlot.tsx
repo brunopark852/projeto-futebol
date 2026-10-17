@@ -37,7 +37,7 @@ export default function AdSlot({ slot, adSlotId, className = '' }: AdSlotProps) 
   const activeSlotId = adSlotId || slotIds[slot];
 
   useEffect(() => {
-    if (isLoaded.current) return;
+    if (!activeSlotId || isLoaded.current) return;
     try {
       if (typeof window !== 'undefined') {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -47,6 +47,8 @@ export default function AdSlot({ slot, adSlotId, className = '' }: AdSlotProps) 
       console.error('Erro ao inicializar anúncio AdSense:', err);
     }
   }, []);
+
+  if (!activeSlotId) return null;
 
   return (
     <div className={`${slotStyles[slot]} ${className}`} role="complementary" aria-label="Publicidade">
