@@ -1,8 +1,6 @@
 import Head from 'next/head';
-import Script from 'next/script';
 import Header from './Header';
 import Footer from './Footer';
-import AdSlot from './AdSlot';
 import { ReactNode } from 'react';
 
 interface LayoutProps {
@@ -20,14 +18,8 @@ export default function Layout({ children, title = 'Futebol', description = 'Por
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Script
-        strategy="afterInteractive"
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6873487845862850"
-        crossOrigin="anonymous"
-      />
       <div className="min-h-screen flex flex-col bg-gray-50 font-['Inter']">
         <Header />
-        <AdSlot slot="header" />
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {children}
         </main>

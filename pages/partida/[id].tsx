@@ -440,7 +440,10 @@ export default function PartidaPage({ partida, notFound }: PartidaPageProps) {
       )}
 
       {/* Estatísticas */}
-      {partida.estatisticas && (
+      {partida.estatisticas?.mandante?.finalizacao &&
+        partida.estatisticas?.mandante?.passes &&
+        partida.estatisticas?.visitante?.finalizacao &&
+        partida.estatisticas?.visitante?.passes && (
         <section className="mb-8">
           <h2 className="text-xl font-bold text-slate-900 mb-4">Estatísticas</h2>
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">

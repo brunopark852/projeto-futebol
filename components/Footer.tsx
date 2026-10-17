@@ -18,6 +18,8 @@ export default function Footer() {
               Navegação
             </h3>
             <ul className="space-y-2 text-sm text-slate-600">
+              <li><Link href="/sobre" className="hover:text-emerald-700 transition-colors">Sobre o projeto</Link></li>
+              <li><Link href="/guia-do-futebol" className="hover:text-emerald-700 transition-colors">Guia do futebol</Link></li>
               <li><Link href="/tabela" className="hover:text-emerald-700 transition-colors">Tabela do Brasileirão</Link></li>
               <li><Link href="/ao-vivo" className="hover:text-emerald-700 transition-colors">Jogos Ao Vivo</Link></li>
               <li><Link href="/artilheiros" className="hover:text-emerald-700 transition-colors">Artilheiros</Link></li>

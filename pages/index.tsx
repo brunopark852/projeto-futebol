@@ -2,7 +2,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Layout from '@/components/Layout';
 import AdSlot from '@/components/AdSlot';
-import MatchPollWidget from '@/components/MatchPollWidget';
 import { GetServerSideProps } from 'next';
 import { getAoVivo, getPartidas, getTabela } from '@/lib/futebolService';
 import { formatMatchDateTime, getMatchInstant, getSaoPauloDateKey } from '@/lib/matchDateTime';
@@ -45,7 +44,7 @@ interface CampeonatoPopular {
   id: number;
   nome: string;
   slug: string;
-  destaque: TimeAPI;
+  destaque: TimeAPI | null;
   top3: TimeAPI[];
   timeUsuario: TimeAPI | null;
 }
@@ -53,7 +52,6 @@ interface CampeonatoPopular {
 interface HomeProps {
   jogosHoje: PartidaAPI[];
   jogosAoVivo: PartidaAPI[];
-  oddsEmDestaque: PartidaAPI[];
   campeonatosPopulares: CampeonatoPopular[];
   temJogosHoje: boolean;
   diaFormatado: string;
@@ -86,61 +84,6 @@ function getStatusConfig(status: string): { label: string; class: string; dotCla
     cancelado: { label: 'Cancelado', class: 'bg-gray-300 text-gray-800', dotClass: 'bg-gray-500' },
   };
   return map[s] || { label: status, class: 'bg-gray-100 text-gray-700', dotClass: 'bg-gray-400' };
-}
-
-// Função auxiliar para geração determinística de números "aleatórios"
-// baseada em semente (partida_id + minuto atual) para garantir hidratação consistente.
-function seededRandom(partidaId: number, minute: number, max = 1): number {
-  // xorshift32 simples
-  let seed = partidaId ^ minute;
-  seed = ((seed >> 16) ^ seed) * 0x45d9f3b;
-  seed = ((seed >> 15) ^ seed) * 0x45d9f3b;
-  seed = (seed >> 16) ^ seed;
-  return (seed & 0xfffffff) / 0x1000000 * max;
-}
-
-// Odds sintéticas plausíveis — calculadas a partir do estado real da partida.
-// Em produção, este card receberia odds de uma casa de apostas via API dedicada.
-// Usa semente determinística (partida_id + minuto) para evitar mismatch de hidratação.
-function calcularOdds(partida: PartidaAPI): { mandante: number; empate: number; visitante: number } {
-  const ehAoVivo = partida.status?.toLowerCase() === 'andamento';
-  const placarM = partida.placar_mandante ?? 0;
-  const placarV = partida.placar_visitante ?? 0;
-  const minuto = Math.floor(Date.now() / 60000); // muda a cada minuto
-
-  if (ehAoVivo) {
-    // Mandante ganhando: sua odd cai; visitante sobe.
-    if (placarM > placarV) {
-      return { 
-        mandante: round(1.4 + (placarM - placarV) * 0.15), 
-        empate: round(3.6 + seededRandom(partida.partida_id, minuto, 0.4)), 
-        visitante: round(5.5 + (placarM - placarV) * 0.6) 
-      };
-    }
-    if (placarV > placarM) {
-      return { 
-        mandante: round(5.0 + (placarV - placarM) * 0.5), 
-        empate: round(3.6 + seededRandom(partida.partida_id, minuto, 0.4)), 
-        visitante: round(1.5 + (placarV - placarM) * 0.2) 
-      };
-    }
-    // Empate no placar.
-    return { 
-      mandante: round(2.4 + seededRandom(partida.partida_id, minuto, 0.3)), 
-      empate: round(2.1 + seededRandom(partida.partida_id, minuto, 0.2)), 
-      visitante: round(3.2 + seededRandom(partida.partida_id, minuto, 0.3)) 
-    };
-  }
-
-  // Pré-jogo: odds "abertas" clássicas para Brasileirão, com leve viés mandante.
-  const baseMandante = 2.0 + seededRandom(partida.partida_id, minuto, 0.6); // ~2.0–2.6
-  const baseEmpate = 3.0 + seededRandom(partida.partida_id, minuto, 0.4);    // ~3.0–3.4
-  const baseVisitante = 3.0 + seededRandom(partida.partida_id, minuto, 0.8); // ~3.0–3.8
-  return { mandante: round(baseMandante), empate: round(baseEmpate), visitante: round(baseVisitante) };
-}
-
-function round(n: number): number {
-  return Math.round(n * 100) / 100;
 }
 
 // ============================
@@ -285,83 +228,6 @@ function SectionHeader({
   );
 }
 
-function OddsCard({ jogo }: { jogo: PartidaAPI }) {
-  const odds = calcularOdds(jogo);
-  const isLive = jogo.status?.toLowerCase() === 'andamento';
-  const statusCfg = getStatusConfig(jogo.status);
-
-  return (
-    <Link
-      href={`/partida/${jogo.partida_id}`}
-      className="block bg-white rounded-lg border border-gray-200 p-4 hover:border-emerald-300 hover:shadow-md transition-all"
-    >
-      {/* Cabeçalho: times */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2 min-w-0 flex-1">
-          <Image
-            src={jogo.time_mandante.escudo}
-            alt={jogo.time_mandante.nome_popular}
-            className="escudo-pequeno"
-            loading="lazy"
-            width={24}
-            height={24}
-          />
-          <span className="font-medium text-slate-900 text-sm truncate">{jogo.time_mandante.sigla}</span>
-        </div>
-        <span
-          className={`text-[10px] px-1.5 py-1 rounded font-medium ${statusCfg.class} mx-2 shrink-0 text-center leading-tight`}
-          title={isLive ? 'Partida ao vivo' : `Agendado para ${formatMatchDateTime(jogo)}`}
-        >
-          {isLive ? 'LIVE' : (
-            <span className="flex flex-col">
-              <span>{statusCfg.label}</span>
-              <span className="font-normal">{formatMatchDateTime(jogo)}</span>
-            </span>
-          )}
-        </span>
-        <div className="flex items-center gap-2 min-w-0 flex-1 justify-end">
-          <span className="font-medium text-slate-900 text-sm truncate">{jogo.time_visitante.sigla}</span>
-          <Image
-            src={jogo.time_visitante.escudo}
-            alt={jogo.time_visitante.nome_popular}
-            className="escudo-pequeno"
-            loading="lazy"
-            width={24}
-            height={24}
-          />
-        </div>
-      </div>
-
-      {/* Placar central */}
-      {jogo.placar_mandante !== null && jogo.placar_visitante !== null ? (
-        <div className="text-center mb-3 font-mono text-lg font-bold text-slate-900">
-          {jogo.placar_mandante} <span className="text-slate-400 mx-1">x</span> {jogo.placar_visitante}
-        </div>
-      ) : (
-        <div className="text-center mb-3 text-xs text-slate-500">
-          {jogo.campeonato.nome}
-        </div>
-      )}
-
-      {/* Odds 1X2 */}
-      <div className="grid grid-cols-3 gap-2">
-        <div className="text-center bg-gray-50 border border-gray-200 rounded-md py-2">
-          <div className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">1</div>
-          <div className="text-sm font-bold text-emerald-700 font-mono">{odds.mandante.toFixed(2)}</div>
-        </div>
-        <div className="text-center bg-gray-50 border border-gray-200 rounded-md py-2">
-          <div className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">X</div>
-          <div className="text-sm font-bold text-slate-700 font-mono">{odds.empate.toFixed(2)}</div>
-        </div>
-        <div className="text-center bg-gray-50 border border-gray-200 rounded-md py-2">
-          <div className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">2</div>
-          <div className="text-sm font-bold text-emerald-700 font-mono">{odds.visitante.toFixed(2)}</div>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
 function CampeonatoCard({ camp }: { camp: CampeonatoPopular }) {
   return (
     <Link
@@ -377,7 +243,7 @@ function CampeonatoCard({ camp }: { camp: CampeonatoPopular }) {
             </p>
           )}
         </div>
-        {camp.destaque.time && (
+        {camp.destaque?.time ? (
           <Image
             src={camp.destaque.time.escudo}
             alt={camp.destaque.time.nome_popular}
@@ -386,6 +252,8 @@ function CampeonatoCard({ camp }: { camp: CampeonatoPopular }) {
             width={32}
             height={32}
           />
+        ) : (
+          <span className="text-xs text-slate-500">Dados indisponíveis</span>
         )}
       </div>
 
@@ -425,7 +293,6 @@ function CampeonatoCard({ camp }: { camp: CampeonatoPopular }) {
 export default function Home({
   jogosHoje,
   jogosAoVivo,
-  oddsEmDestaque,
   campeonatosPopulares,
   temJogosHoje,
   diaFormatado,
@@ -434,14 +301,14 @@ export default function Home({
   return (
     <Layout
       title="Futebol - Acompanhamento em tempo real"
-      description="Portal de estatísticas e acompanhamento de futebol brasileiro em tempo real. Tabela, artilheiros, jogos ao vivo e odds por hora."
+      description="Portal de estatísticas e acompanhamento de futebol brasileiro em tempo real. Tabela, artilheiros, resultados, jogos ao vivo e classificação dos campeonatos."
     >
       {/* HERO compacto */}
       <section className="mb-8">
         <div className="bg-emerald-700 rounded-xl p-6 sm:p-8 text-white">
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">Futebol em tempo real</h1>
           <p className="text-emerald-100 text-sm sm:text-base max-w-2xl">
-            Acompanhe jogos, placares, odds e classificação dos principais campeonatos do Brasil.
+            Acompanhe jogos, placares e classificação dos principais campeonatos do Brasil.
           </p>
           <p className="text-emerald-200 text-xs mt-3 capitalize">{diaFormatado}</p>
         </div>
@@ -513,26 +380,14 @@ export default function Home({
             )}
           </section>
 
-          {/* 3. ODDS POR HORA */}
-          <section aria-labelledby="sec-odds-hora">
-            <SectionHeader
-              titulo="Odds Por Hora"
-              subtitulo="Probabilidades 1X2 em jogos de destaque (ao vivo e próximos)"
-              accent="amber"
-            />
-
-            {oddsEmDestaque.length === 0 ? (
-              <EmptyState mensagem="Sem odds em destaque no momento." />
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {oddsEmDestaque.slice(0, 6).map((jogo) => (
-                  <OddsCard key={jogo.partida_id} jogo={jogo} />
-                ))}
-              </div>
-            )}
-            <p className="text-xs text-slate-400 mt-3 text-center">
-              Odds ilustrativas calculadas a partir do estado da partida. Atualizadas a cada requisição.
-            </p>
+          <section aria-labelledby="sec-como-acompanhar">
+            <SectionHeader titulo="Como acompanhar os jogos" accent="emerald" />
+            <div className="rounded-xl border border-gray-200 bg-white p-5 space-y-3 text-sm leading-6 text-slate-700">
+              <p>Consulte o horário, o status e o placar de cada partida antes de comparar resultados. Jogos agendados podem ter seus horários alterados pela organização da competição.</p>
+              <p>As tabelas mostram a classificação recebida das fontes de dados disponíveis. Quando uma atualização estiver atrasada ou incompleta, confira também os comunicados oficiais da competição.</p>
+              <p>Use a página de cada partida para acompanhar os detalhes disponíveis e a seção de notícias para abrir as publicações originais das fontes identificadas.</p>
+              <Link href="/guia-do-futebol" className="inline-flex font-semibold text-emerald-700 hover:underline">Leia nosso guia de tabelas e estatísticas →</Link>
+            </div>
           </section>
         </div>
 
@@ -613,9 +468,6 @@ export default function Home({
         </aside>
       </div>
 
-      <section className="mt-8 pt-6 border-t border-gray-200">
-        <MatchPollWidget matches={jogosHoje} />
-      </section>
      </Layout>
    );
 
@@ -668,42 +520,29 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res })
       (partida: PartidaAPI) => partida.status?.toLowerCase() === 'andamento',
     );
 
-    const oddsEmDestaque: PartidaAPI[] = [
-      ...jogosAoVivoList,
-      ...jogosHojeUniq
-        .filter((jogo) => jogo.status?.toLowerCase() !== 'andamento')
-        .slice(0, 6 - jogosAoVivoList.length),
-    ]
-      .filter((jogo, index, self) => index === self.findIndex((item) => item.partida_id === jogo.partida_id))
-      .slice(0, 6);
-
     // Campeonatos Populares: Série A e Série B
-    const top3A = (tabelaA || []).slice(0, 3);
-    const destaqueA = (tabelaA && tabelaA[0]) ?? null;
-    const timeUsuarioA = (tabelaA && tabelaA.find((time: TimeAPI) => time.time?.nome_popular === 'Flamengo')) ?? destaqueA;
+    // A API/cache pode conter linhas incompletas. Nunca deixe uma linha sem time derrubar o SSR.
+    const tabelaAValida = (tabelaA || []).filter((item: any) =>
+      item?.time && typeof item.time.nome_popular === 'string' && item.time.nome_popular.trim().length > 0
+    );
+    const tabelaBValida = (tabelaB || []).filter((item: any) =>
+      item?.time && typeof item.time.nome_popular === 'string' && item.time.nome_popular.trim().length > 0
+    );
 
-    const top3B = (tabelaB || []).slice(0, 3);
-    const destaqueB = (tabelaB && tabelaB[0]) ?? null;
-    const timeUsuarioB = (tabelaB && tabelaB.find((time: TimeAPI) => time.time?.nome_popular === 'Santos')) ?? destaqueB;
+    const top3A = tabelaAValida.slice(0, 3);
+    const destaqueA = tabelaAValida[0] ?? null;
+    const timeUsuarioA = tabelaAValida.find((time: TimeAPI) => time.time?.nome_popular === 'Flamengo') ?? destaqueA;
+
+    const top3B = tabelaBValida.slice(0, 3);
+    const destaqueB = tabelaBValida[0] ?? null;
+    const timeUsuarioB = tabelaBValida.find((time: TimeAPI) => time.time?.nome_popular === 'Santos') ?? destaqueB;
 
     const campeonatosPopulares: CampeonatoPopular[] = [
       {
         id: CAMPEONATO_SERIE_A_ID,
         nome: 'Brasileirão Série A',
         slug: 'campeonato-brasileiro',
-        destaque: destaqueA ?? {
-          posicao: 1,
-          pontos: 60,
-          jogos: 30,
-          vitorias: 18,
-          empates: 6,
-          derrotas: 6,
-          gols_pro: 50,
-          gols_contra: 26,
-          saldo_gols: 24,
-          aproveitamento: 66.7,
-          time: { time_id: 22, nome_popular: 'Botafogo', sigla: 'BOT', escudo: '' },
-        },
+        destaque: destaqueA,
         top3: top3A,
         timeUsuario: timeUsuarioA,
       },
@@ -711,19 +550,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res })
         id: CAMPEONATO_SERIE_B_ID,
         nome: 'Brasileirão Série B',
         slug: 'campeonato-brasileiro-serie-b',
-        destaque: destaqueB ?? {
-          posicao: 1,
-          pontos: 56,
-          jogos: 31,
-          vitorias: 16,
-          empates: 8,
-          derrotas: 7,
-          gols_pro: 46,
-          gols_contra: 25,
-          saldo_gols: 21,
-          aproveitamento: 60.2,
-          time: { time_id: 63, nome_popular: 'Santos', sigla: 'SAN', escudo: '' },
-        },
+        destaque: destaqueB,
         top3: top3B,
         timeUsuario: timeUsuarioB,
       },
@@ -733,7 +560,6 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res })
       props: {
         jogosHoje: jogosHojeUniq,
         jogosAoVivo: jogosAoVivoList,
-        oddsEmDestaque,
         campeonatosPopulares,
         temJogosHoje: temJogosHojeReal,
         diaFormatado: formatarDiaSemana(),
@@ -741,36 +567,29 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res })
     };
   } catch (error) {
     console.error('Erro geral no getServerSideProps da home:', error);
-    const [tabela, partidas] = await Promise.all([
-      getTabela(10),
-      getPartidas(10),
-    ]);
-    const top3 = (tabela || []).slice(0, 3);
-    const destaque = (tabela && tabela[0]) ?? null;
+    let tabela: TimeAPI[] = [];
+    let partidas: PartidaAPI[] = [];
+    try {
+      [tabela, partidas] = await Promise.all([getTabela(10), getPartidas(10)]);
+    } catch (fallbackError) {
+      console.error('Não foi possível carregar os dados alternativos da home:', fallbackError);
+    }
+    const tabelaValida = (tabela || []).filter((item: any) =>
+      item?.time && typeof item.time.nome_popular === 'string' && item.time.nome_popular.trim().length > 0
+    );
+    const top3 = tabelaValida.slice(0, 3);
+    const destaque = tabelaValida[0] ?? null;
 
     return {
       props: {
         jogosHoje: partidas.slice(0, 5),
         jogosAoVivo: [],
-        oddsEmDestaque: partidas.slice(0, 4),
         campeonatosPopulares: [
           {
             id: 10,
             nome: 'Brasileirão Série A',
             slug: 'brasileirao-serie-a',
-            destaque: destaque ?? {
-              posicao: 1,
-              pontos: 60,
-              jogos: 30,
-              vitorias: 18,
-              empates: 6,
-              derrotas: 6,
-              gols_pro: 50,
-              gols_contra: 26,
-              saldo_gols: 24,
-              aproveitamento: 66.7,
-              time: { time_id: 22, nome_popular: 'Botafogo', sigla: 'BOT', escudo: '' },
-            },
+            destaque,
             top3,
             timeUsuario: destaque,
           },
