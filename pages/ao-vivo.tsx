@@ -3,8 +3,9 @@ import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getAoVivo } from '@/lib/futebolService';
+import { formatMatchDateTime, getMatchInstant, getSaoPauloDateKey, type MatchDateFields } from '@/lib/matchDateTime';
 
-interface PartidaAPI {
+interface PartidaAPI extends MatchDateFields {
   partida_id: number;
   data_hora: string;
   estadio: { nome: string; cidade: string };
@@ -21,18 +22,13 @@ interface AoVivoPageProps {
 }
 
 export default function AoVivoPage({ partidas }: AoVivoPageProps) {
-  const formatarDataHora = (iso: string) => {
-    return new Date(iso).toLocaleString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
+  const formatarDataHora = (partida: PartidaAPI) => formatMatchDateTime(partida);
 
   const getStatusConfig = (status: string) => {
     const configs: Record<string, { label: string; class: string; dotClass: string }> = {
-      'não iniciado': { label: 'Não iniciado', class: 'bg-gray-100 text-gray-700', dotClass: 'bg-gray-400' },
+      'nao_iniciado': { label: 'Agendado', class: 'bg-gray-100 text-gray-700', dotClass: 'bg-gray-400' },
+      'agendado': { label: 'Agendado', class: 'bg-gray-100 text-gray-700', dotClass: 'bg-gray-400' },
+      'não iniciado': { label: 'Agendado', class: 'bg-gray-100 text-gray-700', dotClass: 'bg-gray-400' },
       'ao vivo': { label: 'AO VIVO', class: 'bg-red-600 text-white animate-pulse', dotClass: 'bg-red-400 animate-pulse' },
       'intervalo': { label: 'Intervalo', class: 'bg-yellow-600 text-white', dotClass: 'bg-yellow-400' },
       'encerrado': { label: 'Encerrado', class: 'bg-emerald-600 text-white', dotClass: 'bg-emerald-400' },
@@ -42,28 +38,22 @@ export default function AoVivoPage({ partidas }: AoVivoPageProps) {
     return configs[status.toLowerCase()] || { label: status, class: 'bg-gray-100 text-gray-700', dotClass: 'bg-gray-400' };
   };
 
-  const partidasHoje = partidas.filter((p) => {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-    const partidaDate = new Date(p.data_hora);
-    partidaDate.setHours(0, 0, 0, 0);
-    return partidaDate.getTime() === hoje.getTime();
+  const agora = new Date();
+  const hojeSaoPaulo = getSaoPauloDateKey(agora);
+
+  const partidasHoje = partidas.filter((partida) => {
+    const data = getMatchInstant(partida);
+    return data !== null && getSaoPauloDateKey(data) === hojeSaoPaulo;
   });
 
-  const partidasFuturas = partidas.filter((p) => {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-    const partidaDate = new Date(p.data_hora);
-    partidaDate.setHours(0, 0, 0, 0);
-    return partidaDate > hoje;
+  const partidasFuturas = partidas.filter((partida) => {
+    const data = getMatchInstant(partida);
+    return data !== null && data > agora && getSaoPauloDateKey(data) > hojeSaoPaulo;
   }).slice(0, 10);
 
-  const partidasPassadas = partidas.filter((p) => {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-    const partidaDate = new Date(p.data_hora);
-    partidaDate.setHours(0, 0, 0, 0);
-    return partidaDate < hoje && p.status.toLowerCase() === 'encerrado';
+  const partidasPassadas = partidas.filter((partida) => {
+    const data = getMatchInstant(partida);
+    return data !== null && getSaoPauloDateKey(data) < hojeSaoPaulo && partida.status.toLowerCase() === 'encerrado';
   }).slice(-5).reverse();
 
   return (
@@ -78,7 +68,7 @@ export default function AoVivoPage({ partidas }: AoVivoPageProps) {
         <section className="mb-10">
           <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
             <span className="w-2 h-2 bg-red-600 rounded-full animate-pulse"></span>
-            Jogos de Hoje ({new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })})
+            Jogos de Hoje ({new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'America/Sao_Paulo' })})
           </h2>
           <div className="space-y-3">
             {partidasHoje.map((partida) => (
@@ -98,7 +88,7 @@ export default function AoVivoPage({ partidas }: AoVivoPageProps) {
                         {partida.placar_mandante} x {partida.placar_visitante}
                       </div>
                     )}
-                    <p className="text-xs text-slate-500 mt-1">{formatarDataHora(partida.data_hora)}</p>
+                    <p className="text-xs text-slate-500 mt-1">{formatarDataHora(partida)}</p>
                     <p className="text-xs text-slate-400 truncate w-full text-center">{partida.estadio.nome}</p>
                   </div>
                   <div className="flex-1 text-left ml-4 min-w-0">
@@ -135,7 +125,7 @@ export default function AoVivoPage({ partidas }: AoVivoPageProps) {
                       {getStatusConfig(partida.status).label}
                     </span>
                     <div className="text-lg font-medium text-slate-400 mt-1 font-mono">- x -</div>
-                    <p className="text-xs text-slate-500 mt-1">{formatarDataHora(partida.data_hora)}</p>
+                    <p className="text-xs text-slate-500 mt-1">{formatarDataHora(partida)}</p>
                     <p className="text-xs text-slate-400 truncate w-full text-center">{partida.estadio.nome}</p>
                   </div>
                   <div className="flex-1 text-left ml-4 min-w-0">
@@ -176,7 +166,7 @@ export default function AoVivoPage({ partidas }: AoVivoPageProps) {
                         {partida.placar_mandante} x {partida.placar_visitante}
                       </div>
                     )}
-                    <p className="text-xs text-slate-500 mt-1">{formatarDataHora(partida.data_hora)}</p>
+                    <p className="text-xs text-slate-500 mt-1">{formatarDataHora(partida)}</p>
                     <p className="text-xs text-slate-400 truncate w-full text-center">{partida.estadio.nome}</p>
                   </div>
                   <div className="flex-1 text-left ml-4 min-w-0">
