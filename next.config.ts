@@ -88,6 +88,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'crests.football-data.org',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'via.placeholder.com',
         pathname: '/**',
       },

@@ -5,6 +5,7 @@ import AdSlot from '@/components/AdSlot';
 import MatchPollWidget from '@/components/MatchPollWidget';
 import { GetServerSideProps } from 'next';
 import { getAoVivo, getPartidas, getTabela } from '@/lib/futebolService';
+import { formatMatchDateTime, getMatchInstant, getSaoPauloDateKey } from '@/lib/matchDateTime';
 
 // ============================
 // Types — espelham a API Futebol
@@ -56,26 +57,18 @@ interface HomeProps {
   campeonatosPopulares: CampeonatoPopular[];
   temJogosHoje: boolean;
   diaFormatado: string;
-  atualizadoEm: string;
 }
 
 // ============================
 // Helpers visuais
 // ============================
-function formatarHora(iso: string): string {
-  // iso ex.: "2026-01-28T19:00:00-0300"
-  try {
-    return new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-  } catch {
-    return '';
-  }
-}
-
 function formatarDiaSemana(): string {
   return new Date().toLocaleDateString('pt-BR', {
     weekday: 'long',
     day: '2-digit',
     month: 'long',
+    year: 'numeric',
+    timeZone: 'America/Sao_Paulo',
   });
 }
 
@@ -85,8 +78,9 @@ function getStatusConfig(status: string): { label: string; class: string; dotCla
     andamento: { label: 'AO VIVO', class: 'bg-red-600 text-white', dotClass: 'bg-red-400 animate-pulse' },
     'ao vivo': { label: 'AO VIVO', class: 'bg-red-600 text-white', dotClass: 'bg-red-400 animate-pulse' },
     intervalo: { label: 'INTERVALO', class: 'bg-yellow-500 text-white', dotClass: 'bg-yellow-400' },
-    nao_iniciado: { label: 'Não iniciado', class: 'bg-gray-100 text-gray-700', dotClass: 'bg-gray-400' },
-    'não iniciado': { label: 'Não iniciado', class: 'bg-gray-100 text-gray-700', dotClass: 'bg-gray-400' },
+    nao_iniciado: { label: 'Agendado', class: 'bg-gray-100 text-gray-700', dotClass: 'bg-gray-400' },
+    agendado: { label: 'Agendado', class: 'bg-gray-100 text-gray-700', dotClass: 'bg-gray-400' },
+    'não iniciado': { label: 'Agendado', class: 'bg-gray-100 text-gray-700', dotClass: 'bg-gray-400' },
     encerrado: { label: 'Encerrado', class: 'bg-emerald-600 text-white', dotClass: 'bg-emerald-400' },
     adiado: { label: 'Adiado', class: 'bg-gray-300 text-gray-800', dotClass: 'bg-gray-500' },
     cancelado: { label: 'Cancelado', class: 'bg-gray-300 text-gray-800', dotClass: 'bg-gray-500' },
@@ -198,7 +192,7 @@ function MatchCard({ jogo, compacto = false }: { jogo: PartidaAPI; compacto?: bo
               {jogo.cronometro}&apos; • {jogo.periodo?.replace('-', ' ') ?? ''}
             </p>
           ) : (
-            <p className="text-xs text-slate-500 mt-1">{formatarHora(jogo.data_realizacao_iso)}</p>
+            <p className="text-xs text-slate-500 mt-1 whitespace-nowrap">{formatMatchDateTime(jogo)}</p>
           )}
 
           <p className="text-xs text-slate-400 truncate w-full text-center">{jogo.estadio.nome_popular}</p>
@@ -314,8 +308,16 @@ function OddsCard({ jogo }: { jogo: PartidaAPI }) {
           />
           <span className="font-medium text-slate-900 text-sm truncate">{jogo.time_mandante.sigla}</span>
         </div>
-        <span className={`text-xs px-2 py-0.5 rounded font-medium ${statusCfg.class} mx-2 shrink-0`}>
-          {isLive ? 'LIVE' : formatarHora(jogo.data_realizacao_iso)}
+        <span
+          className={`text-[10px] px-1.5 py-1 rounded font-medium ${statusCfg.class} mx-2 shrink-0 text-center leading-tight`}
+          title={isLive ? 'Partida ao vivo' : `Agendado para ${formatMatchDateTime(jogo)}`}
+        >
+          {isLive ? 'LIVE' : (
+            <span className="flex flex-col">
+              <span>{statusCfg.label}</span>
+              <span className="font-normal">{formatMatchDateTime(jogo)}</span>
+            </span>
+          )}
         </span>
         <div className="flex items-center gap-2 min-w-0 flex-1 justify-end">
           <span className="font-medium text-slate-900 text-sm truncate">{jogo.time_visitante.sigla}</span>
@@ -427,11 +429,7 @@ export default function Home({
   campeonatosPopulares,
   temJogosHoje,
   diaFormatado,
-  atualizadoEm,
-}: HomeProps & {
-  diaFormatado: string;
-  atualizadoEm: string;
-}) {
+}: HomeProps) {
 
   return (
     <Layout
@@ -626,10 +624,7 @@ export default function Home({
 // ============================
 // SSR — combina dados das APIs
 // ============================
-export const getServerSideProps: GetServerSideProps<HomeProps & {
-  diaFormatado: string;
-  atualizadoEm: string;
-}> = async ({ res }) => {
+export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res }) => {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
   res.setHeader('CDN-Cache-Control', 'no-store');
   res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
@@ -648,50 +643,48 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
     // ===== Computar seções =====
 
     const agora = new Date();
-    const hoje = new Date(agora);
-    hoje.setHours(0, 0, 0, 0);
-    const amanha = new Date(hoje);
-    amanha.setDate(amanha.getDate() + 1);
+    const hojeSaoPaulo = getSaoPauloDateKey(agora);
 
-    const todasPartidas = [...partidasAoVivo, ...partidasSerieA, ...partidasSerieB];
+    const todasPartidas: PartidaAPI[] = [...partidasAoVivo, ...partidasSerieA, ...partidasSerieB];
     const partidasFuturas = todasPartidas
-      .filter((p) => {
-        const data = new Date(p.data_realizacao_iso || p.data_hora);
-        const status = String(p.status || '').toLowerCase();
-        return !Number.isNaN(data.getTime()) && data >= agora && !['finalizado', 'encerrado', 'cancelado'].includes(status);
+      .map((partida) => ({ partida, data: getMatchInstant(partida) }))
+      .filter(({ partida, data }) => {
+        const status = String(partida.status || '').toLowerCase();
+        return data !== null && data >= agora && !['finalizado', 'encerrado', 'cancelado'].includes(status);
       })
-      .sort((a, b) => new Date(a.data_realizacao_iso || a.data_hora).getTime() - new Date(b.data_realizacao_iso || b.data_hora).getTime());
+      .sort((a, b) => a.data!.getTime() - b.data!.getTime())
+      .map(({ partida }) => partida);
 
-    const jogosHoje = partidasFuturas.filter((p) => {
-      const data = new Date(p.data_realizacao_iso || p.data_hora);
-      return data >= hoje && data < amanha;
+    const jogosHoje = partidasFuturas.filter((partida) => {
+      const data = getMatchInstant(partida);
+      return data !== null && getSaoPauloDateKey(data) === hojeSaoPaulo;
     });
     const temJogosHojeReal = jogosHoje.length > 0;
     const jogosExibidos = (temJogosHojeReal ? jogosHoje : partidasFuturas).slice(0, 6);
 
-    const jogosHojeUniq = Array.from(new Map(jogosExibidos.map((j) => [j.partida_id, j])).values());
+    const jogosHojeUniq: PartidaAPI[] = Array.from(new Map(jogosExibidos.map((jogo) => [jogo.partida_id, jogo])).values());
 
-    const jogosAoVivoList = partidasAoVivo.filter(
-      (p: any) => p.status?.toLowerCase() === 'andamento',
+    const jogosAoVivoList: PartidaAPI[] = partidasAoVivo.filter(
+      (partida: PartidaAPI) => partida.status?.toLowerCase() === 'andamento',
     );
 
-    const oddsEmDestaque = [
+    const oddsEmDestaque: PartidaAPI[] = [
       ...jogosAoVivoList,
       ...jogosHojeUniq
-        .filter((j: any) => j.status?.toLowerCase() !== 'andamento')
+        .filter((jogo) => jogo.status?.toLowerCase() !== 'andamento')
         .slice(0, 6 - jogosAoVivoList.length),
     ]
-      .filter((j: any, idx: number, self: any[]) => idx === self.findIndex((x: any) => x.partida_id === j.partida_id))
+      .filter((jogo, index, self) => index === self.findIndex((item) => item.partida_id === jogo.partida_id))
       .slice(0, 6);
 
     // Campeonatos Populares: Série A e Série B
     const top3A = (tabelaA || []).slice(0, 3);
     const destaqueA = (tabelaA && tabelaA[0]) ?? null;
-    const timeUsuarioA = (tabelaA && tabelaA.find((t: any) => t.time?.nome_popular === 'Flamengo')) ?? destaqueA;
+    const timeUsuarioA = (tabelaA && tabelaA.find((time: TimeAPI) => time.time?.nome_popular === 'Flamengo')) ?? destaqueA;
 
     const top3B = (tabelaB || []).slice(0, 3);
     const destaqueB = (tabelaB && tabelaB[0]) ?? null;
-    const timeUsuarioB = (tabelaB && tabelaB.find((t: any) => t.time?.nome_popular === 'Santos')) ?? destaqueB;
+    const timeUsuarioB = (tabelaB && tabelaB.find((time: TimeAPI) => time.time?.nome_popular === 'Santos')) ?? destaqueB;
 
     const campeonatosPopulares: CampeonatoPopular[] = [
       {
@@ -743,12 +736,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
         oddsEmDestaque,
         campeonatosPopulares,
         temJogosHoje: temJogosHojeReal,
-        diaFormatado: new Date().toLocaleDateString('pt-BR', {
-          weekday: 'long',
-          day: '2-digit',
-          month: 'long',
-        }),
-        atualizadoEm: new Date().toLocaleString('pt-BR'),
+        diaFormatado: formatarDiaSemana(),
       },
     };
   } catch (error) {
@@ -788,12 +776,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps & {
           },
         ],
         temJogosHoje: false,
-        diaFormatado: new Date().toLocaleDateString('pt-BR', {
-          weekday: 'long',
-          day: '2-digit',
-          month: 'long',
-        }),
-        atualizadoEm: new Date().toLocaleString('pt-BR'),
+        diaFormatado: formatarDiaSemana(),
       },
     };
   }

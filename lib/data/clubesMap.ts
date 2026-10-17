@@ -4,6 +4,7 @@
 export const ESCUDOS_CLUBES: Record<string, string> = {
   // Série A
   'Botafogo': '/escudos/botafogo.png',
+  'Botafogo FR': '/escudos/botafogo.png',
   'Palmeiras': '/escudos/palmeiras.png',
   'Fortaleza': '/escudos/fortaleza.png',
   'Flamengo': '/escudos/flamengo.png',
@@ -14,6 +15,7 @@ export const ESCUDOS_CLUBES: Record<string, string> = {
   'Vasco da Gama': '/escudos/vasco.png',
   'Vasco': '/escudos/vasco.png',
   'Atlético-MG': '/escudos/atletico-mg.png',
+  'CA Mineiro': '/escudos/atletico-mg.png',
   'Grêmio': '/escudos/gremio.png',
   'Criciúma': '/escudos/criciuma.png',
   'Red Bull Bragantino': '/escudos/red-bull-bragantino.png',
@@ -36,6 +38,7 @@ export const ESCUDOS_CLUBES: Record<string, string> = {
   'Vila Nova': '/escudos/vila-nova.png',
   'América-MG': '/escudos/america-mg.png',
   'Coritiba': '/escudos/coritiba.png',
+  'Coritiba FBC': '/escudos/coritiba.png',
   'Amazonas': '/escudos/amazonas.png',
   'Operário-PR': '/escudos/operario-pr.png',
   'Goiás': '/escudos/goias.png',
@@ -43,6 +46,7 @@ export const ESCUDOS_CLUBES: Record<string, string> = {
   'Ponte Preta': '/escudos/ponte-preta.png',
   'Botafogo-SP': '/escudos/botafogo-sp.png',
   'Chapecoense': '/escudos/chapecoense.png',
+  'Chapecoense AF': '/escudos/chapecoense.png',
   'CRB': '/escudos/crb.png',
   'Paysandu': '/escudos/paysandu.png',
   'Ituano': '/escudos/ituano.png',
