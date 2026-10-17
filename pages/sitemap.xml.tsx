@@ -8,6 +8,8 @@ const staticPages = [
   '/artilheiros',
   '/ao-vivo',
   '/noticias',
+  '/sobre',
+  '/guia-do-futebol',
   '/privacidade',
   '/termos',
   '/contato',
