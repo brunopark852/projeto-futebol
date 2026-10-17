@@ -12,7 +12,8 @@ export default function ContatoPage() {
 
         <div className="bg-white rounded-xl border border-gray-200 p-6 sm:p-8 shadow-sm mb-8">
           <h2 className="text-xl font-semibold text-slate-900 mb-6">Formulário de Contato</h2>
-          <form className="space-y-6" action={formspreeId ? `https://formspree.io/f/${formspreeId}` : "mailto:contato@futebolagora.blog"} method="POST">
+          {formspreeId ? (
+          <form className="space-y-6" action={`https://formspree.io/f/${formspreeId}`} method="POST">
             <div>
               <label htmlFor="nome" className="block text-sm font-medium text-slate-700 mb-1">Nome completo *</label>
               <input type="text" id="nome" name="nome" maxLength={80} autoComplete="name" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition" />
@@ -42,6 +43,13 @@ export default function ContatoPage() {
             </button>
             <p className="text-xs text-slate-500 text-center">Campos marcados com * são obrigatórios. Se o formulário não abrir seu aplicativo de e-mail, escreva para contato@futebolagora.blog. Configure NEXT_PUBLIC_FORMSPREE_ID para habilitar o envio pelo Formspree.</p>
           </form>
+          ) : (
+            <div className="rounded-lg border border-emerald-100 bg-emerald-50 p-5 text-center">
+              <p className="mb-3 text-sm leading-6 text-slate-700">O formulário ainda não está configurado para envio automático. Você pode entrar em contato diretamente pelo e-mail abaixo.</p>
+              <a href="mailto:contato@futebolagora.blog" className="inline-flex rounded-lg bg-emerald-700 px-5 py-3 font-semibold text-white hover:bg-emerald-800">Enviar e-mail</a>
+              <p className="mt-3 text-xs text-slate-500">Para habilitar o formulário, configure a variável NEXT_PUBLIC_FORMSPREE_ID no projeto.</p>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
