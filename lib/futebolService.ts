@@ -52,13 +52,31 @@ export async function getAoVivo() {
   return (raw || []).map((p: any) => ({
     ...p,
     status: p.status?.toLowerCase() === 'finalizado' ? 'encerrado' : p.status?.toLowerCase() === 'agendado' ? 'nao_iniciado' : p.status,
+    // A API/cache pode devolver partidas incompletas. Sempre forneça objetos seguros para a renderização SSR.
     time_mandante: {
       ...p.time_mandante,
+      time_id: p.time_mandante?.time_id ?? 0,
+      nome_popular: p.time_mandante?.nome_popular ?? 'Time não informado',
+      sigla: p.time_mandante?.sigla ?? '—',
       escudo: getEscudoClube(p.time_mandante?.nome_popular, p.time_mandante?.escudo),
     },
     time_visitante: {
       ...p.time_visitante,
+      time_id: p.time_visitante?.time_id ?? 0,
+      nome_popular: p.time_visitante?.nome_popular ?? 'Time não informado',
+      sigla: p.time_visitante?.sigla ?? '—',
       escudo: getEscudoClube(p.time_visitante?.nome_popular, p.time_visitante?.escudo),
+    },
+    estadio: {
+      ...p.estadio,
+      estadio_id: p.estadio?.estadio_id ?? 0,
+      nome_popular: p.estadio?.nome_popular ?? 'Estádio não informado',
+    },
+    campeonato: {
+      ...p.campeonato,
+      campeonato_id: p.campeonato?.campeonato_id ?? 0,
+      nome: p.campeonato?.nome ?? 'Campeonato não informado',
+      slug: p.campeonato?.slug ?? '',
     },
   }));
 }
@@ -79,13 +97,31 @@ export async function getPartidas(campeonatoId = 10) {
 
   return (partidas || []).map((p: any) => ({
     ...p,
+    // Evita que uma partida incompleta da API derrube a página inicial durante SSR.
     time_mandante: {
       ...p.time_mandante,
+      time_id: p.time_mandante?.time_id ?? 0,
+      nome_popular: p.time_mandante?.nome_popular ?? 'Time não informado',
+      sigla: p.time_mandante?.sigla ?? '—',
       escudo: getEscudoClube(p.time_mandante?.nome_popular, p.time_mandante?.escudo),
     },
     time_visitante: {
       ...p.time_visitante,
+      time_id: p.time_visitante?.time_id ?? 0,
+      nome_popular: p.time_visitante?.nome_popular ?? 'Time não informado',
+      sigla: p.time_visitante?.sigla ?? '—',
       escudo: getEscudoClube(p.time_visitante?.nome_popular, p.time_visitante?.escudo),
+    },
+    estadio: {
+      ...p.estadio,
+      estadio_id: p.estadio?.estadio_id ?? 0,
+      nome_popular: p.estadio?.nome_popular ?? 'Estádio não informado',
+    },
+    campeonato: {
+      ...p.campeonato,
+      campeonato_id: p.campeonato?.campeonato_id ?? 0,
+      nome: p.campeonato?.nome ?? 'Campeonato não informado',
+      slug: p.campeonato?.slug ?? '',
     },
   }));
 }
