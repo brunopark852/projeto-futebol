@@ -2,7 +2,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Layout from '@/components/Layout';
 import AdSlot from '@/components/AdSlot';
-import MatchPollWidget from '@/components/MatchPollWidget';
 import { GetServerSideProps } from 'next';
 import { getAoVivo, getPartidas, getTabela } from '@/lib/futebolService';
 import { formatMatchDateTime, getMatchInstant, getSaoPauloDateKey } from '@/lib/matchDateTime';
@@ -45,7 +44,7 @@ interface CampeonatoPopular {
   id: number;
   nome: string;
   slug: string;
-  destaque: TimeAPI;
+  destaque: TimeAPI | null;
   top3: TimeAPI[];
   timeUsuario: TimeAPI | null;
 }
@@ -244,7 +243,7 @@ function CampeonatoCard({ camp }: { camp: CampeonatoPopular }) {
             </p>
           )}
         </div>
-        {camp.destaque.time && (
+        {camp.destaque?.time ? (
           <Image
             src={camp.destaque.time.escudo}
             alt={camp.destaque.time.nome_popular}
@@ -253,6 +252,8 @@ function CampeonatoCard({ camp }: { camp: CampeonatoPopular }) {
             width={32}
             height={32}
           />
+        ) : (
+          <span className="text-xs text-slate-500">Dados indisponíveis</span>
         )}
       </div>
 
@@ -467,9 +468,6 @@ export default function Home({
         </aside>
       </div>
 
-      <section className="mt-8 pt-6 border-t border-gray-200">
-        <MatchPollWidget matches={jogosHoje} />
-      </section>
      </Layout>
    );
 
@@ -544,19 +542,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res })
         id: CAMPEONATO_SERIE_A_ID,
         nome: 'Brasileirão Série A',
         slug: 'campeonato-brasileiro',
-        destaque: destaqueA ?? {
-          posicao: 1,
-          pontos: 60,
-          jogos: 30,
-          vitorias: 18,
-          empates: 6,
-          derrotas: 6,
-          gols_pro: 50,
-          gols_contra: 26,
-          saldo_gols: 24,
-          aproveitamento: 66.7,
-          time: { time_id: 22, nome_popular: 'Botafogo', sigla: 'BOT', escudo: '' },
-        },
+        destaque: destaqueA,
         top3: top3A,
         timeUsuario: timeUsuarioA,
       },
@@ -564,19 +550,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res })
         id: CAMPEONATO_SERIE_B_ID,
         nome: 'Brasileirão Série B',
         slug: 'campeonato-brasileiro-serie-b',
-        destaque: destaqueB ?? {
-          posicao: 1,
-          pontos: 56,
-          jogos: 31,
-          vitorias: 16,
-          empates: 8,
-          derrotas: 7,
-          gols_pro: 46,
-          gols_contra: 25,
-          saldo_gols: 21,
-          aproveitamento: 60.2,
-          time: { time_id: 63, nome_popular: 'Santos', sigla: 'SAN', escudo: '' },
-        },
+        destaque: destaqueB,
         top3: top3B,
         timeUsuario: timeUsuarioB,
       },
@@ -615,19 +589,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res })
             id: 10,
             nome: 'Brasileirão Série A',
             slug: 'brasileirao-serie-a',
-            destaque: destaque ?? {
-              posicao: 1,
-              pontos: 60,
-              jogos: 30,
-              vitorias: 18,
-              empates: 6,
-              derrotas: 6,
-              gols_pro: 50,
-              gols_contra: 26,
-              saldo_gols: 24,
-              aproveitamento: 66.7,
-              time: { time_id: 22, nome_popular: 'Botafogo', sigla: 'BOT', escudo: '' },
-            },
+            destaque,
             top3,
             timeUsuario: destaque,
           },
