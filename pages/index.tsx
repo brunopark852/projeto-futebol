@@ -593,12 +593,18 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res })
     };
   } catch (error) {
     console.error('Erro geral no getServerSideProps da home:', error);
-    const [tabela, partidas] = await Promise.all([
-      getTabela(10),
-      getPartidas(10),
-    ]);
-    const top3 = (tabela || []).slice(0, 3);
-    const destaque = (tabela && tabela[0]) ?? null;
+    let tabela: TimeAPI[] = [];
+    let partidas: PartidaAPI[] = [];
+    try {
+      [tabela, partidas] = await Promise.all([getTabela(10), getPartidas(10)]);
+    } catch (fallbackError) {
+      console.error('Não foi possível carregar os dados alternativos da home:', fallbackError);
+    }
+    const tabelaValida = (tabela || []).filter((item: any) =>
+      item?.time && typeof item.time.nome_popular === 'string' && item.time.nome_popular.trim().length > 0
+    );
+    const top3 = tabelaValida.slice(0, 3);
+    const destaque = tabelaValida[0] ?? null;
 
     return {
       props: {
